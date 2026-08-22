@@ -1,0 +1,21 @@
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+
+# Sass
+.sass-cache/
+*.css.map
+
+# Dependencias (si más adelante sumás alguna)
+node_modules/
+
+# Archivos originales sin comprimir: pesan demasiado para el repo.
+# Guardalos aparte (Drive, disco externo) y subí solo los optimizados.
+*.psd
+*.ai
+*-original.*

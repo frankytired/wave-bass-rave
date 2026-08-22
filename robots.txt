@@ -1,0 +1,5 @@
+# Permitimos que todos los buscadores indexen todo el sitio
+User-agent: *
+Allow: /
+
+Sitemap: https://wavebassrave.com/sitemap.xml
