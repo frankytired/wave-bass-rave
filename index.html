@@ -4,41 +4,74 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- ── Identidad de la página ── -->
+  <!--
+    Wave Bass Rave — sitio de una sola página.
+
+    Dependencias: styles.css (compilado desde styles.scss) y script.js.
+    Sin frameworks ni proceso de build más allá de Sass.
+
+    Convenciones de este documento:
+      · Nomenclatura BEM: bloque__elemento--modificador.
+      · El marcado no define estilos: ni atributos style ni clases
+        utilitarias. Cada elemento lleva una única clase semántica.
+      · data-en           → traducción al inglés del texto del elemento.
+      · data-en-ph        → traducción del placeholder de un campo.
+      · .aparece          → el elemento entra con una animación al scrollear.
+      · .aparece--fijo    → variante rápida y sin cascada, para títulos.
+      · data-titulo       → rótulo que la galería muestra sobre la foto.
+  -->
+
+  <!-- Identidad e indexación -->
   <title>Wave Bass Rave | Fiesta de música electrónica en Buenos Aires</title>
-  <meta name="description" content="Wave Bass Rave: fiestas de drum &amp; bass, dubstep, house y techno en Buenos Aires. Próxima fecha: Edición Outdoor en Paraje Ache, 29 de agosto de 2026. Academia de DJ y producción, y sello discográfico propio.">
+  <meta name="description" content="Wave Bass Rave: fiestas de drum &amp; bass, dubstep, house y techno en Buenos Aires desde 2016. Academia de DJ y producción musical, y sello discográfico propio.">
+  <meta name="author" content="Wave Bass Rave">
   <link rel="canonical" href="https://wavebassrave.com/">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#050607">
 
-  <!-- ── Cómo se ve al compartir el link (WhatsApp, Instagram, Facebook) ── -->
+  <!-- Open Graph: previsualización al compartir el enlace -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Wave Bass Rave">
   <meta property="og:locale" content="es_AR">
   <meta property="og:locale:alternate" content="en_US">
   <meta property="og:url" content="https://wavebassrave.com/">
   <meta property="og:title" content="Wave Bass Rave | Fiesta de música electrónica en Buenos Aires">
-  <meta property="og:description" content="Drum &amp; bass, dubstep, house y techno en Buenos Aires. Próxima fecha: Edición Outdoor en Paraje Ache, 29 de agosto de 2026.">
+  <meta property="og:description" content="Bass music culture desde 2016. Raves indoor y outdoor, academia de DJ y producción, y sello discográfico en Buenos Aires.">
   <meta property="og:image" content="https://wavebassrave.com/Multimedia/WAVE-EN-ACHE.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Flyer de Wave Bass Rave — Edición Outdoor en Ache">
 
-  <!-- ── Cómo se ve al compartir en X / Twitter ── -->
+  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Wave Bass Rave | Fiesta de música electrónica en Buenos Aires">
-  <meta name="twitter:description" content="Drum &amp; bass, dubstep, house y techno en Buenos Aires. Próxima fecha: Edición Outdoor en Paraje Ache, 29 de agosto de 2026.">
+  <meta name="twitter:description" content="Bass music culture desde 2016. Raves indoor y outdoor, academia de DJ y producción, y sello discográfico en Buenos Aires.">
   <meta name="twitter:image" content="https://wavebassrave.com/Multimedia/WAVE-EN-ACHE.jpg">
 
-  <!-- El favicon necesita una imagen CUADRADA. Si LOGO.png es
-       rectangular, el navegador lo deforma: ver nota al final. -->
-  <link rel="icon" href="Multimedia/favicon.png" type="image/png">
-  <link rel="apple-touch-icon" href="Multimedia/favicon.png">
+  <!-- El favicon debe ser una imagen cuadrada: el navegador la escala
+       a 32x32 y deforma cualquier proporción distinta. -->
+  <link rel="icon" href="/Multimedia\favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="Multimedia\favicon.png">
+
+  <!-- preconnect adelanta el handshake con el CDN de fuentes -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+
+  <!-- El poster de la portada es lo primero que se ve: se precarga
+       para que no haya un fotograma en negro al abrir el sitio. -->
+  <link rel="preload" as="image" href="Multimedia/portada-poster.jpg">
+
   <link rel="stylesheet" href="styles.css">
 
-  <!-- ── Datos estructurados: le dicen a Google qué es esto ──
-       Actualizá las fechas y el lugar cada vez que cambien. -->
+  <!--
+    Datos estructurados (schema.org). Permiten que el buscador
+    interprete la entidad, el evento y el catálogo del sello, y que
+    los muestre enriquecidos en los resultados.
+
+    Mantener sincronizado con el contenido visible: un evento con
+    fecha vencida deja de mostrarse y resta confianza al dominio.
+  -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -50,8 +83,22 @@
         "url": "https://wavebassrave.com/",
         "logo": "https://wavebassrave.com/Multimedia/LOGO.png",
         "email": "booking@wavebassrave.com",
+        "foundingDate": "2016",
         "areaServed": "Buenos Aires, Argentina",
-        "description": "Fiestas de música electrónica, academia de DJ y producción, y sello discográfico en Buenos Aires."
+        "description": "Fiestas de bass music indoor y outdoor, academia de DJ y producción, y sello discográfico en Buenos Aires.",
+        "sameAs": [
+          "RUTA_INSTAGRAM",
+          "RUTA_SOUNDCLOUD"
+        ]
+      },
+      {
+        "@type": "EducationalOrganization",
+        "@id": "https://wavebassrave.com/#academia",
+        "name": "Wave Academy",
+        "url": "https://wavebassrave.com/#academia",
+        "parentOrganization": { "@id": "https://wavebassrave.com/#organizacion" },
+        "areaServed": "Buenos Aires, Argentina",
+        "description": "Academia de producción musical y DJ especializada en bass music. Clases presenciales y online en FL Studio y Ableton Live."
       },
       {
         "@type": "MusicEvent",
@@ -61,7 +108,7 @@
         "eventStatus": "https://schema.org/EventScheduled",
         "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
         "image": "https://wavebassrave.com/Multimedia/WAVE-EN-ACHE.jpg",
-        "description": "Edición outdoor de Wave Bass Rave en Paraje Ache: drum & bass, dubstep, house y techno.",
+        "description": "Edición outdoor de Wave Bass Rave en Paraje Ache: drum and bass, dubstep, house y techno.",
         "location": {
           "@type": "Place",
           "name": "Paraje Ache",
@@ -73,12 +120,19 @@
           }
         },
         "organizer": { "@id": "https://wavebassrave.com/#organizacion" },
-        "offers": {
-          "@type": "Offer",
-          "url": "https://wavebassrave.com/#eventos",
-          "availability": "https://schema.org/InStock",
-          "priceCurrency": "ARS"
-        }
+        "performer": { "@id": "https://wavebassrave.com/#organizacion" }
+      },
+      {
+        "@type": "ItemList",
+        "name": "Lanzamientos de Wave Bass Rave",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "item": { "@type": "MusicRecording", "name": "Sh3 / Bl1nd", "byArtist": { "@type": "MusicGroup", "name": "Soma" }, "url": "https://open.spotify.com/intl-es/track/4emnAGCfj72TDkFLTMNMwg" } },
+          { "@type": "ListItem", "position": 2, "item": { "@type": "MusicRecording", "name": "Oh Shit!", "byArtist": { "@type": "MusicGroup", "name": "Soma ft Franky Shit" }, "url": "https://open.spotify.com/intl-es/track/0cCn9qrBAL9A4QZXhOReQd" } },
+          { "@type": "ListItem", "position": 3, "item": { "@type": "MusicAlbum", "name": "Wave VA 01", "byArtist": { "@type": "MusicGroup", "name": "Various Artists" }, "url": "https://open.spotify.com/intl-es/album/5k82XperYAn4NsOfV1vMGI" } },
+          { "@type": "ListItem", "position": 4, "item": { "@type": "MusicRecording", "name": "Bad Boy Sound", "byArtist": { "@type": "MusicGroup", "name": "Banger" }, "url": "https://open.spotify.com/intl-es/track/3cgroAgTPYYkdwyng8NTGH" } },
+          { "@type": "ListItem", "position": 5, "item": { "@type": "MusicRecording", "name": "Party Mood", "byArtist": { "@type": "MusicGroup", "name": "Banger" }, "url": "https://open.spotify.com/intl-es/track/7FXEV2m4O1FOXO2ZBRxzx3" } },
+          { "@type": "ListItem", "position": 6, "item": { "@type": "MusicRecording", "name": "El Tema Del Verano", "byArtist": { "@type": "MusicGroup", "name": "Soma" }, "url": "https://open.spotify.com/intl-es/track/4wvH6kUvOpnW4mxBxdidlf" } }
+        ]
       }
     ]
   }
@@ -87,20 +141,18 @@
 
 <body>
 
-<!-- ═══════════════════════════════════════════════════════════
-     RUTA_AQUI → imágenes de galería que faltan cargar
-
-     data-en="..." es la traducción al inglés de ese texto.
-     aparece      → entra y sale al scrollear
-     aparece--fijo → entra rápido y ya no se va (títulos)
-     ═══════════════════════════════════════════════════════════ -->
+<!-- Enlace de salto: primer elemento enfocable de la página, permite
+     a quien navega con teclado evitar el menú en cada recarga. -->
+<a class="salto" href="#contenido">Ir al contenido</a>
 
 <nav class="nav">
   <a class="nav__logo" href="#portada">
-    <img src="Multimedia/LOGO.png" alt="Logo de Wave Bass Rave">
+    <img src="Multimedia/LOGO.png" alt="Wave Bass Rave">
   </a>
 
-  <ul class="nav__menu">
+  <!-- En pantallas chicas esta lista se convierte en un panel
+       desplegable; el control está en .nav__menu-boton. -->
+  <ul class="nav__menu" id="menu">
     <li><a href="#eventos"  data-en="Events">Eventos</a></li>
     <li><a href="#academia" data-en="Academy">Academia</a></li>
     <li><a href="#label"    data-en="Label">Label</a></li>
@@ -108,333 +160,369 @@
     <li><a href="#contacto" data-en="Contact">Contacto</a></li>
   </ul>
 
-  <button class="nav__idioma" id="idioma">ES / EN</button>
+  <div class="nav__acciones">
+    <button class="nav__idioma" id="idioma" type="button">ES / EN</button>
+
+    <!-- aria-expanded lo actualiza script.js y el CSS lo usa como
+         selector para transformar las barras en una X. -->
+    <button class="nav__menu-boton" id="menu-boton" type="button"
+            aria-label="Abrir menú" aria-expanded="false" aria-controls="menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
 </nav>
 
 
-<header class="portada" id="portada">
-  <div class="portada__fondo">
-    <video class="portada__video" autoplay muted loop playsinline>
-      <source src="Multimedia/WAVE2.mp4" type="video/mp4">
-    </video>
-    <div class="portada__velo"></div>
-  </div>
+<main id="contenido">
 
-  <div class="portada__texto">
-    <p class="portada__bajada" data-en="Outdoor edition at Ache">Edicion Outdoor en Ache</p>
-    <h1 class="portada__titulo">WAVE BASS RAVE</h1>
-    <span class="portada__linea"></span>
-    <div class="portada__datos">
-      <p>
-        <span>29 · 8 · 2026</span>
-        <span data-en="— 4:00 PM to 1:00 AM">— 16:00 a 01:00</span>
-      </p>
-      <p>
-        <span data-en="Paraje Ache, Buenos Aires">Paraje Ache, Buenos Aires</span>
-        <span>— Av. Pres. Figueroa Alcorta 2170</span>
-      </p>
-    </div>
-  </div>
-</header>
-
-
-<section class="seccion" id="eventos">
-  <div class="seccion__contenido">
-
-    <div class="seccion__encabezado aparece aparece--fijo">
-      <div>
-        <p class="seccion__bajada" data-en="Upcoming dates">Próximas fechas</p>
-        <h2 class="seccion__titulo" data-en="Events">Eventos</h2>
-      </div>
-      <p class="seccion__nota" data-en="Limited tickets. Doors close at 2 AM.">Entradas limitadas. La puerta cierra a las 02:00.</p>
+  <!-- El atributo src del video lo asigna script.js solo en pantallas
+       grandes: en móvil queda el poster para no descargar el archivo. -->
+  <header class="portada" id="portada">
+    <div class="portada__fondo">
+      <video class="portada__video" id="video-portada"
+             poster="Multimedia/portada-poster.jpg"
+             autoplay muted loop playsinline preload="none"
+             data-video="Multimedia/WAVE2.mp4"></video>
+      <div class="portada__velo"></div>
     </div>
 
-    <article class="evento-destacado aparece">
-      <figure class="evento-destacado__imagen">
-        <img src="Multimedia/WAVE-EN-ACHE.jpg" alt="Flyer de Wave Bass Rave Edición Outdoor en Paraje Ache, Buenos Aires" decoding="async" fetchpriority="high">
-      </figure>
-      <div class="evento-destacado__info">
-        <span class="evento-destacado__etiqueta" data-en="Next event">Próximo evento</span>
-        <p class="evento-destacado__fecha" data-en="29 AUG 2026 · 4:00 PM TO 1:00 AM">29 AGO 2026 · 16:00 A 01:00</p>
-        <h3 class="evento-destacado__nombre" data-en="Outdoor Edition — Ache">Edición Outdoor — Ache</h3>
-        <p class="evento-destacado__descripcion" data-en="Paraje Ache, Buenos Aires. Full line up coming soon — first ticket release available now.">Paraje Ache, Buenos Aires. Line up completo próximamente — primera tanda de entradas ya disponible.</p>
-        <a class="evento-destacado__boton" href="RUTA_ENTRADAS" target="_blank" rel="noopener" data-en="Get tickets">Conseguir entrada</a>
-      </div>
-    </article>
+    <div class="portada__texto">
+      <p class="portada__bajada">Bass Music Culture Since 2016</p>
+      <h1 class="portada__titulo">WAVE BASS RAVE</h1>
+      <span class="portada__linea"></span>
+      <p class="portada__datos">Indoor &amp; Outdoor Bass Music Raves</p>
+    </div>
+  </header>
 
-    <p class="seccion__subtitulo" data-en="Past events">Eventos anteriores</p>
 
-    <div class="eventos-pasados aparece">
-      <article class="eventos-pasados__item">
-        <figure class="eventos-pasados__imagen">
-          <img src="Multimedia/WAVE4.jpg" alt="Wave Bass Rave Sesión 005, B2B especial en Nave Industrial" loading="lazy" decoding="async">
-        </figure>
-        <p class="eventos-pasados__fecha">05 DIC</p>
+  <section class="seccion" id="eventos">
+    <div class="seccion__contenido">
+
+      <div class="seccion__encabezado aparece aparece--fijo">
         <div>
-          <h3 class="eventos-pasados__nombre" data-en="Session 005 — B2B special">Edicion especial aniversario Lvl 2 l</h3>
-          <p class="eventos-pasados__lugar">Uniclub · Buenos Aires</p>
+          <p class="seccion__bajada" data-en="Events">Eventos</p>
+          <h2 class="seccion__titulo" data-en="Event archive">Registro de Eventos</h2>
         </div>
-        <a class="eventos-pasados__fotos" href="RUTA_DRIVE_1" target="_blank" rel="noopener" data-en="Photos">Fotos</a>
+      </div>
+
+      <article class="evento-destacado aparece">
+        <figure class="evento-destacado__imagen">
+          <img src="Multimedia/WAVE-EN-ACHE.jpg"
+               alt="Flyer de Wave Bass Rave Edición Outdoor en Paraje Ache, Buenos Aires"
+               decoding="async" fetchpriority="high">
+        </figure>
+
+        <div class="evento-destacado__info">
+          <span class="evento-destacado__etiqueta" data-en="Latest event">Ultimo evento</span>
+          <p class="evento-destacado__fecha" data-en="29 AUG 2026 · 4:00 PM TO 1:00 AM">29 AGO 2026 · 16:00 A 01:00</p>
+          <h3 class="evento-destacado__nombre" data-en="Outdoor Edition — Ache">Edición Outdoor — Ache</h3>
+          <p class="evento-destacado__descripcion" data-en="Paraje Ache, Buenos Aires. Full line up coming soon — first ticket release available now.">Paraje Ache, Buenos Aires. Line up completo próximamente — primera tanda de entradas ya disponible.</p>
+          <a class="evento-destacado__boton" href=https://drive.google.com/drive/folders/1UI3dJbjSUCJKSPAeoM4zsBTfuStyK8uf" target="_blank" rel="noopener" data-en="Photos">Fotos</a>
+        </div>
       </article>
 
-      <article class="eventos-pasados__item">
-        <figure class="eventos-pasados__imagen">
-          <img src="Multimedia/WAVE3.jpg" alt="Wave Bass Rave Año Nuevo, sesión especial de 12 horas" loading="lazy" decoding="async">
-        </figure>
-        <p class="eventos-pasados__fecha">31 DIC</p>
+      <p class="seccion__subtitulo" data-en="Past events">Eventos anteriores</p>
+
+      <div class="eventos-pasados aparece">
+        <article class="eventos-pasados__item">
+          <figure class="eventos-pasados__imagen">
+            <img src="Multimedia/WAVE4.jpg" alt="Wave Bass Rave Aniversario 10 nivel 2 en Uniclub" loading="lazy" decoding="async">
+          </figure>
+          <p class="eventos-pasados__fecha">11 JUL</p>
+          <div>
+            <h3 class="eventos-pasados__nombre" data-en="10th Anniversary lvl 2">Aniversario #10 lvl 2</h3>
+            <p class="eventos-pasados__lugar">UNICLUB · Buenos Aires</p>
+          </div>
+        </article>
+
+        <article class="eventos-pasados__item">
+          <figure class="eventos-pasados__imagen">
+            <img src="Multimedia/WAVE3.jpg" alt="Wave Bass Rave Aniversario 10 nivel 1 en Uniclub" loading="lazy" decoding="async">
+          </figure>
+          <p class="eventos-pasados__fecha">19 JUN</p>
+          <div>
+            <h3 class="eventos-pasados__nombre" data-en="10th Anniversary lvl 1">Aniversario #10 lvl 1</h3>
+            <p class="eventos-pasados__lugar">UNICLUB · Buenos Aires</p>
+          </div>
+          <a class="eventos-pasados__fotos" href="https://drive.google.com/drive/folders/1c3s_hy4YziASahJ9QiiVmd44mP_-dsqJ" target="_blank" rel="noopener" data-en="Photos">Fotos</a>
+        </article>
+
+        <article class="eventos-pasados__item">
+          <figure class="eventos-pasados__imagen">
+            <img src="Multimedia/WAVE5.jpg" alt="Wave Bass Rave Edición Especial Front 2 Front en Niceto Bar" loading="lazy" decoding="async">
+          </figure>
+          <p class="eventos-pasados__fecha">20 SEP</p>
+          <div>
+            <h3 class="eventos-pasados__nombre" data-en="Front 2 Front Special Edition">Edicion Especial Front 2 Front</h3>
+            <p class="eventos-pasados__lugar">Niceto Bar · Buenos Aires</p>
+          </div>
+          <a class="eventos-pasados__fotos" href="https://drive.google.com/drive/folders/1zacSYfil2mc9M2m5no6P5n31Abtr4CDk" target="_blank" rel="noopener" data-en="Photos">Fotos</a>
+        </article>
+      </div>
+
+    </div>
+  </section>
+
+
+  <section class="seccion" id="academia">
+    <div class="seccion__contenido">
+
+      <div class="seccion__encabezado aparece aparece--fijo">
         <div>
-          <h3 class="eventos-pasados__nombre" data-en="New Year — 12h special session">Edicion especial Aniversario</h3>
-          <p class="eventos-pasados__lugar" data-en="Location to be confirmed">Uniclub · Buenos Aires</p>
+          <p class="seccion__bajada" data-en="Training">Formación</p>
+          <h2 class="seccion__titulo" data-en="Academy">Academia</h2>
         </div>
-        <a class="eventos-pasados__fotos" href="RUTA_DRIVE_2" target="_blank" rel="noopener" data-en="Photos">Fotos</a>
-      </article>
+        <p class="seccion__nota" data-en="Limited spots. Online &amp; in-person classes.">Cupos reducidos, Clases on-line &amp; presenciales.</p>
+      </div>
 
-      <article class="eventos-pasados__item">
-        <figure class="eventos-pasados__imagen">
-          <img src="Multimedia/WAVE5.jpg" alt="Wave Bass Rave Sesión 003, warm up de primavera en Terraza Norte" loading="lazy" decoding="async">
-        </figure>
-        <p class="eventos-pasados__fecha">20 SEP</p>
+      <div class="academia-intro aparece">
+        <p class="academia-intro__marca">Wave Academy</p>
+        <h3 class="academia-intro__titulo" data-en="The Bass Music academy in Spanish">La academia del Bass Music en español</h3>
+        <p class="academia-intro__lead" data-en="Wave Academy is more than an academy: it's a meeting point for DJs, producers and Bass Music lovers.">Wave Academy es más que una academia: es un punto de encuentro para DJs, productores y amantes del Bass Music.</p>
+        <p class="academia-intro__lead" data-en="A space to learn, create, share music and be part of an active community.">Un espacio para aprender, crear, compartir música y formar parte de una comunidad activa.</p>
+      </div>
+
+      <div class="academia-bloques">
+        <div class="academia-bloque aparece">
+          <h4 class="academia-bloque__titulo" data-en="What we offer">Qué ofrecemos</h4>
+          <ul class="academia-bloque__items">
+            <li data-en="Music production and DJ mixing classes, online and in person.">Clases de producción musical y mezcla DJ, tanto online como presencial.</li>
+            <li data-en="Training in FL Studio and Ableton Live.">Formación en FL Studio y Ableton Live.</li>
+            <li data-en="Recorded classes and exclusive material.">Clases grabadas y material exclusivo.</li>
+            <li data-en="A community of DJs, producers and artists.">Comunidad de DJs, productores y artistas.</li>
+            <li data-en="Personalised guidance on your own project.">Acompañamiento personalizado en tu proyecto.</li>
+          </ul>
+        </div>
+
+        <div class="academia-bloque aparece">
+          <h4 class="academia-bloque__titulo" data-en="Exclusive benefits">Beneficios exclusivos</h4>
+          <p class="academia-bloque__bajada" data-en="Wave Academy students get special benefits within the Wave ecosystem:">Los alumnos de Wave Academy acceden a beneficios especiales dentro del ecosistema Wave:</p>
+          <ul class="academia-bloque__items">
+            <li data-en="The chance to play at events and showcases.">Posibilidad de tocar en eventos y muestras.</li>
+            <li data-en="Access to recorded classes and exclusive content.">Acceso a clases grabadas y contenido exclusivo.</li>
+            <li data-en="Participation in community activities.">Participación en actividades de la comunidad.</li>
+            <li data-en="Support to release music on digital platforms.">Acompañamiento para lanzar música en plataformas digitales.</li>
+            <li data-en="Discounts and perks on Wave events, workshops and projects.">Descuentos y beneficios en eventos, workshops y propuestas de Wave.</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="seccion__subtitulo academia-instructores" data-en="Our instructors">Nuestros instructores</p>
+
+      <div class="profesores">
+        <article class="profesor aparece">
+          <figure class="profesor__foto">
+            <img src="Multimedia/academia/soma1.webp" alt="Dante Chama, alias Soma, instructor de mezcla, DJ y producción musical" loading="lazy" decoding="async">
+          </figure>
+          <p class="profesor__numero" data-en="Teacher 01">Profesor 01</p>
+          <h3 class="profesor__nombre">Dante Chama / Soma</h3>
+          <p class="profesor__curso" data-en="DJ mixing &amp; music production instructor">Instructor mezcla y Dj - Produccion Musical</p>
+          <p class="profesor__bio">Drum &amp; Bass - Dubstep - House - Techno</p>
+          <a class="profesor__boton" href="RUTA_CURSO_1" target="_blank" rel="noopener" data-en="Course details">Ver curso</a>
+        </article>
+
+        <article class="profesor aparece">
+          <figure class="profesor__foto">
+            <img src="Multimedia/academia/banger1.webp" alt="Lucas Gonzalo, alias Banger, instructor de mezcla DJ" loading="lazy" decoding="async">
+          </figure>
+          <p class="profesor__numero" data-en="Teacher 02">Profesor 02</p>
+          <h3 class="profesor__nombre">Lucas Gonzalo / Banger</h3>
+          <p class="profesor__curso" data-en="DJ mixing instructor">Instructor mezcla Dj</p>
+          <p class="profesor__bio">Drum &amp; Bass - House - Techno</p>
+          <a class="profesor__boton" href="RUTA_CURSO_2" target="_blank" rel="noopener" data-en="Course details">Ver curso</a>
+        </article>
+
+        <article class="profesor aparece">
+          <figure class="profesor__foto">
+            <img src="Multimedia/academia/xhavi1.webp" alt="Tatiana Dietrich, alias Xhavi, instructora de producción musical" loading="lazy" decoding="async">
+          </figure>
+          <p class="profesor__numero" data-en="Teacher 03">Profesor 03</p>
+          <h3 class="profesor__nombre">Tatiana Dietrich / Xhavi</h3>
+          <p class="profesor__curso" data-en="Music production instructor">Instructor produccion musical</p>
+          <p class="profesor__bio">Dubstep - Bass Music</p>
+          <a class="profesor__boton" href="RUTA_CURSO_3" target="_blank" rel="noopener" data-en="Course details">Ver curso</a>
+        </article>
+
+        <article class="profesor aparece">
+          <figure class="profesor__foto">
+            <img src="Multimedia/academia/rednoise1.webp" alt="Ian Farid Chanta, alias The Red Noise, instructor de mezcla, DJ y producción musical" loading="lazy" decoding="async">
+          </figure>
+          <p class="profesor__numero" data-en="Teacher 04">Profesor 04</p>
+          <h3 class="profesor__nombre">Ian Farid Chanta / The Red Noise</h3>
+          <p class="profesor__curso" data-en="DJ mixing &amp; music production instructor">Instructor mezcla y Dj - Produccion Musical</p>
+          <p class="profesor__bio">Bass Music - Latincore - Techno</p>
+          <a class="profesor__boton" href="RUTA_CURSO_4" target="_blank" rel="noopener" data-en="Course details">Ver curso</a>
+        </article>
+      </div>
+
+    </div>
+  </section>
+
+
+  <section class="seccion" id="label">
+    <div class="seccion__contenido">
+
+      <div class="seccion__encabezado aparece aparece--fijo">
         <div>
-          <h3 class="eventos-pasados__nombre" data-en="Session 003 — Spring warm up">Edicion especiazl Front 2 Front</h3>
-          <p class="eventos-pasados__lugar">Niceto Club · Buenos Aires</p>
+          <p class="seccion__bajada" data-en="Record label">Discográfica</p>
+          <h2 class="seccion__titulo" data-en="Label &amp; Crew releases">Label &amp; Lanzamientos de la Crew</h2>
         </div>
-        <a class="eventos-pasados__fotos" href="RUTA_DRIVE_3" target="_blank" rel="noopener" data-en="Photos">Fotos</a>
-      </article>
-    </div>
-
-  </div>
-</section>
-
-
-<section class="seccion" id="academia">
-  <div class="seccion__contenido">
-
-    <div class="seccion__encabezado aparece aparece--fijo">
-      <div>
-        <p class="seccion__bajada" data-en="Training">Formación</p>
-        <h2 class="seccion__titulo" data-en="Academy">Academia</h2>
       </div>
-      <p class="seccion__nota" data-en="Limited spots, groups of up to 8 people.">Cupos reducidos, grupos de hasta 8 personas.</p>
-    </div>
 
-    <div class="profesores">
-      <article class="profesor aparece">
-        <figure class="profesor__foto">
-          <img src="Multimedia/academia/soma1.webp" alt="Dante Chama, alias Soma, instructor de mezcla, DJ y producción musical" loading="lazy" decoding="async">
-        </figure>
-        <p class="profesor__numero" data-en="Teacher 01">Profesor 01</p>
-        <h3 class="profesor__nombre">Dante Chama / Soma</h3>
-        <p class="profesor__curso" data-en="Mixing &amp; DJ instructor - Music production">Instructor mezcla y Dj - Produccion Musical</p>
-        <p class="profesor__bio">Drum &amp; Bass - Dubstep - House - Techno</p>
-        <a class="profesor__boton" href="RUTA_CURSO_1" target="_blank" rel="noopener" data-en="Course details">Ver curso</a>
-      </article>
+      <div class="lanzamientos">
+        <article class="lanzamiento aparece">
+          <figure class="lanzamiento__tapa">
+            <img src="Multimedia/spotify-artwork-sh3-bl1nd-3000x3000.jpg" alt="Tapa del release Sh3 / Bl1nd de Soma" loading="lazy" decoding="async">
+          </figure>
+          <h3 class="lanzamiento__titulo">Sh3 / Bl1nd</h3>
+          <p class="lanzamiento__artista">Artista — SOMA</p>
+          <a class="lanzamiento__boton" href="https://open.spotify.com/intl-es/track/4emnAGCfj72TDkFLTMNMwg" target="_blank" rel="noopener" data-en="Listen on Spotify">Escuchar en Spotify</a>
+        </article>
 
-      <article class="profesor aparece">
-        <figure class="profesor__foto">
-          <img src="Multimedia/academia/banger1.webp" alt="Lucas Gonzalo, alias Banger, instructor de mezcla DJ" loading="lazy" decoding="async">
-        </figure>
-        <p class="profesor__numero" data-en="Teacher 02">Profesor 02</p>
-        <h3 class="profesor__nombre">Lucas Gonzalo / Banger</h3>
-        <p class="profesor__curso" data-en="DJ mixing instructor">Instructor mezcla Dj</p>
-        <p class="profesor__bio">Drum &amp; Bass - House - Techno</p>
-        <a class="profesor__boton" href="RUTA_CURSO_2" target="_blank" rel="noopener" data-en="Course details">Ver curso</a>
-      </article>
+        <article class="lanzamiento aparece">
+          <figure class="lanzamiento__tapa">
+            <img src="Multimedia/spotify-artwork-oh-shit-3000x3000.jpg" alt="Tapa del release Oh Shit! de Soma ft Franky Shit" loading="lazy" decoding="async">
+          </figure>
+          <h3 class="lanzamiento__titulo">Oh Shit!</h3>
+          <p class="lanzamiento__artista">Artista — SOMA FT FRANKY SHIT</p>
+          <a class="lanzamiento__boton" href="https://open.spotify.com/intl-es/track/0cCn9qrBAL9A4QZXhOReQd" target="_blank" rel="noopener" data-en="Listen on Spotify">Escuchar en Spotify</a>
+        </article>
 
-      <article class="profesor aparece">
-        <figure class="profesor__foto">
-          <img src="Multimedia/academia/xhavi1.webp" alt="Tatiana Dietrich, alias Xhavi, instructora de producción musical" loading="lazy" decoding="async">
-        </figure>
-        <p class="profesor__numero" data-en="Teacher 03">Profesor 03</p>
-        <h3 class="profesor__nombre">Tatiana Dietrich / Xhavi</h3>
-        <p class="profesor__curso" data-en="Music production instructor">Instructor produccion musical</p>
-        <p class="profesor__bio">Dubstep - Bass Music</p>
-        <a class="profesor__boton" href="RUTA_CURSO_3" target="_blank" rel="noopener" data-en="Course details">Ver curso</a>
-      </article>
-    </div>
+        <article class="lanzamiento aparece">
+          <figure class="lanzamiento__tapa">
+            <img src="Multimedia/spotify-artwork-upgrade-3000x3000.jpg" alt="Tapa del compilado Wave VA 01" loading="lazy" decoding="async">
+          </figure>
+          <h3 class="lanzamiento__titulo">Wave VA 01</h3>
+          <p class="lanzamiento__artista">Various Artists</p>
+          <a class="lanzamiento__boton" href="https://open.spotify.com/intl-es/album/5k82XperYAn4NsOfV1vMGI" target="_blank" rel="noopener" data-en="Listen on Spotify">Escuchar en Spotify</a>
+        </article>
 
-  </div>
-</section>
+        <article class="lanzamiento aparece">
+          <figure class="lanzamiento__tapa">
+            <img src="Multimedia/spotify-artwork-bad-boy-sound-3000x3000.jpg" alt="Tapa del release Bad Boy Sound de Banger" loading="lazy" decoding="async">
+          </figure>
+          <h3 class="lanzamiento__titulo">Bad Boy Sound</h3>
+          <p class="lanzamiento__artista">Artista — BANGER</p>
+          <a class="lanzamiento__boton" href="https://open.spotify.com/intl-es/track/3cgroAgTPYYkdwyng8NTGH" target="_blank" rel="noopener" data-en="Listen on Spotify">Escuchar en Spotify</a>
+        </article>
 
+        <article class="lanzamiento aparece">
+          <figure class="lanzamiento__tapa">
+            <img src="Multimedia/spotify-artwork-party-mood-3000x3000.jpg" alt="Tapa del release Party Mood de Banger" loading="lazy" decoding="async">
+          </figure>
+          <h3 class="lanzamiento__titulo">Party Mood</h3>
+          <p class="lanzamiento__artista">Artista — BANGER</p>
+          <a class="lanzamiento__boton" href="https://open.spotify.com/intl-es/track/7FXEV2m4O1FOXO2ZBRxzx3" target="_blank" rel="noopener" data-en="Listen on Spotify">Escuchar en Spotify</a>
+        </article>
 
-<section class="seccion" id="label">
-  <div class="seccion__contenido">
-
-    <div class="seccion__encabezado aparece aparece--fijo">
-      <div>
-        <p class="seccion__bajada" data-en="Record label">Discográfica</p>
-        <h2 class="seccion__titulo">Label</h2>
+        <article class="lanzamiento aparece">
+          <figure class="lanzamiento__tapa">
+            <img src="Multimedia/spotify-artwork-el-tema-del-verano-3000x3000.jpg" alt="Tapa del release El Tema Del Verano de Soma" loading="lazy" decoding="async">
+          </figure>
+          <h3 class="lanzamiento__titulo">El Tema Del Verano</h3>
+          <p class="lanzamiento__artista">Artista — SOMA</p>
+          <a class="lanzamiento__boton" href="https://open.spotify.com/intl-es/track/4wvH6kUvOpnW4mxBxdidlf" target="_blank" rel="noopener" data-en="Listen on Spotify">Escuchar en Spotify</a>
+        </article>
       </div>
-      <p class="seccion__nota" data-en="Latest releases from the label.">Últimos lanzamientos del sello.</p>
+
     </div>
-
-    <div class="lanzamientos">
-      <article class="lanzamiento aparece">
-        <figure class="lanzamiento__tapa">
-          <img src="Multimedia/spotify-artwork-sh3-bl1nd-3000x3000.jpg" alt="Tapa del release Sh3 / Bl1nd, WBR 001" loading="lazy" decoding="async">
-        </figure>
-        <h3 class="lanzamiento__titulo">Sh3 / Bl1nd</h3>
-        <p class="lanzamiento__artista">Artista — SOMA</p>
-        <a class="lanzamiento__boton" href="https://open.spotify.com/intl-es/track/4emnAGCfj72TDkFLTMNMwg" target="_blank" rel="noopener" data-en="Listen on Spotify">Escuchar en Spotify</a>
-      </article>
-
-      <article class="lanzamiento aparece">
-        <figure class="lanzamiento__tapa">
-          <img src="Multimedia/spotify-artwork-oh-shit-3000x3000.jpg" alt="Tapa del release Oh Shit!, WBR 002" loading="lazy" decoding="async">
-        </figure>
-        <h3 class="lanzamiento__titulo">Oh Shit!</h3>
-        <p class="lanzamiento__artista">Artista — SOMA FT FRANKY SHIT</p>
-        <a class="lanzamiento__boton" href="https://open.spotify.com/intl-es/track/0cCn9qrBAL9A4QZXhOReQd" target="_blank" rel="noopener" data-en="Listen on Spotify">Escuchar en Spotify</a>
-      </article>
-
-      <article class="lanzamiento aparece">
-        <figure class="lanzamiento__tapa">
-          <img src="Multimedia/spotify-artwork-upgrade-3000x3000.jpg" alt="Tapa del compilado Wave VA 01, WBR 003" loading="lazy" decoding="async">
-        </figure>
-        <h3 class="lanzamiento__titulo">Wave VA 01</h3>
-        <p class="lanzamiento__artista">Various Arists</p>
-        <a class="lanzamiento__boton" href="https://open.spotify.com/intl-es/album/5k82XperYAn4NsOfV1vMGI" target="_blank" rel="noopener" data-en="Listen on Spotify">Escuchar en Spotify</a>
-      </article>
-
-      <article class="lanzamiento aparece">
-        <figure class="lanzamiento__tapa">
-          <img src="Multimedia/spotify-artwork-bad-boy-sound-3000x3000.jpg" alt="Tapa del release Bad Boy Sound de Banger, WBR 004" loading="lazy" decoding="async">
-        </figure>
-        <h3 class="lanzamiento__titulo">Bad Boy Sound</h3>
-        <p class="lanzamiento__artista">Artista — BANGER</p>
-        <a class="lanzamiento__boton" href="https://open.spotify.com/intl-es/track/3cgroAgTPYYkdwyng8NTGH" target="_blank" rel="noopener" data-en="Listen on Spotify">Escuchar en Spotify</a>
-      </article>
-
-      <article class="lanzamiento aparece">
-        <figure class="lanzamiento__tapa">
-          <img src="Multimedia/spotify-artwork-party-mood-3000x3000.jpg" alt="Tapa del release Party Mood de Banger, WBR 005" loading="lazy" decoding="async">
-        </figure>
-        <h3 class="lanzamiento__titulo">Party Mood</h3>
-        <p class="lanzamiento__artista">Artista — BANGER</p>
-        <a class="lanzamiento__boton" href="https://open.spotify.com/intl-es/track/7FXEV2m4O1FOXO2ZBRxzx3" target="_blank" rel="noopener" data-en="Listen on Spotify">Escuchar en Spotify</a>
-      </article>
-
-      <article class="lanzamiento aparece">
-        <figure class="lanzamiento__tapa">
-          <img src="Multimedia/spotify-artwork-el-tema-del-verano-3000x3000.jpg" alt="Tapa del release El Tema Del Verano de Soma, WBR 006" loading="lazy" decoding="async">
-        </figure>
-        <h3 class="lanzamiento__titulo">El Tema Del Verano</h3>
-        <p class="lanzamiento__artista">Artista — SOMA</p>
-        <a class="lanzamiento__boton" href="https://open.spotify.com/intl-es/track/4wvH6kUvOpnW4mxBxdidlf" target="_blank" rel="noopener" data-en="Listen on Spotify">Escuchar en Spotify</a>
-      </article>
-    </div>
-
-  </div>
-</section>
+  </section>
 
 
-<section class="seccion" id="galeria">
-  <div class="seccion__contenido">
+  <!-- El mosaico se arma por CSS con un patrón nth-child cada 6 fotos:
+       agregar o quitar figure reacomoda la grilla sin tocar estilos.
+       script.js convierte cada figure en disparador del visor. -->
+  <section class="seccion" id="galeria">
+    <div class="seccion__contenido">
 
-    <div class="seccion__encabezado aparece aparece--fijo">
-      <div>
-        <p class="seccion__bajada" data-en="Archive">Archivo</p>
-        <h2 class="seccion__titulo" data-en="Gallery">Galería</h2>
+      <div class="seccion__encabezado aparece aparece--fijo">
+        <div>
+          <p class="seccion__bajada" data-en="Archive">Archivo</p>
+          <h2 class="seccion__titulo" data-en="Gallery">Galería</h2>
+        </div>
       </div>
-      <p class="seccion__nota" data-en="Previous dates.">Fechas Anteriores.</p>
+
+      <div class="galeria aparece aparece--fijo">
+        <figure class="galeria__foto" data-titulo="F2F">
+          <img src="RUTA_AQUI/galeria-1.webp" alt="Público y pista en Wave Bass Rave F2F" loading="lazy" decoding="async">
+        </figure>
+        <figure class="galeria__foto" data-titulo="F2F">
+          <img src="RUTA_AQUI/galeria-2.webp" alt="Público y pista en Wave Bass Rave F2F" loading="lazy" decoding="async">
+        </figure>
+        <figure class="galeria__foto" data-titulo="F2F">
+          <img src="RUTA_AQUI/galeria-3.webp" alt="Público y pista en Wave Bass Rave F2F" loading="lazy" decoding="async">
+        </figure>
+        <figure class="galeria__foto" data-titulo="F2F">
+          <img src="RUTA_AQUI/galeria-4.webp" alt="Público y pista en Wave Bass Rave F2F" loading="lazy" decoding="async">
+        </figure>
+        <figure class="galeria__foto" data-titulo="F2F">
+          <img src="RUTA_AQUI/galeria-5.webp" alt="Público y pista en Wave Bass Rave F2F" loading="lazy" decoding="async">
+        </figure>
+        <figure class="galeria__foto" data-titulo="F2F">
+          <img src="RUTA_AQUI/galeria-6.webp" alt="Público y pista en Wave Bass Rave F2F" loading="lazy" decoding="async">
+        </figure>
+        <figure class="galeria__foto" data-titulo="F2F">
+          <img src="RUTA_AQUI/galeria-7.webp" alt="Público y pista en Wave Bass Rave F2F" loading="lazy" decoding="async">
+        </figure>
+        <figure class="galeria__foto" data-titulo="F2F">
+          <img src="RUTA_AQUI/galeria-8.webp" alt="Público y pista en Wave Bass Rave F2F" loading="lazy" decoding="async">
+        </figure>
+        <figure class="galeria__foto" data-titulo="F2F">
+          <img src="RUTA_AQUI/galeria-9.webp" alt="Público y pista en Wave Bass Rave F2F" loading="lazy" decoding="async">
+        </figure>
+        <figure class="galeria__foto" data-titulo="F2F">
+          <img src="RUTA_AQUI/galeria-10.webp" alt="Público y pista en Wave Bass Rave F2F" loading="lazy" decoding="async">
+        </figure>
+        <figure class="galeria__foto" data-titulo="F2F">
+          <img src="RUTA_AQUI/galeria-11.webp" alt="Público y pista en Wave Bass Rave F2F" loading="lazy" decoding="async">
+        </figure>
+        <figure class="galeria__foto" data-titulo="F2F">
+          <img src="RUTA_AQUI/galeria-12.webp" alt="Público y pista en Wave Bass Rave F2F" loading="lazy" decoding="async">
+        </figure>
+      </div>
+
     </div>
-
-    <div class="galeria aparece aparece--fijo">
-      <figure class="galeria__foto" data-titulo="F2F">
-        <img src="RUTA_AQUI/galeria-1.webp" alt="Público y pista en Wave Bass Rave F2F" loading="lazy" decoding="async">
-      </figure>
-      <figure class="galeria__foto" data-titulo="F2F">
-        <img src="RUTA_AQUI/galeria-2.webp" alt="Público y pista en Wave Bass Rave F2F" loading="lazy" decoding="async">
-      </figure>
-      <figure class="galeria__foto" data-titulo="F2F">
-        <img src="RUTA_AQUI/galeria-3.webp" alt="Público y pista en Wave Bass Rave F2F" loading="lazy" decoding="async">
-      </figure>
-      <figure class="galeria__foto" data-titulo="F2F">
-        <img src="RUTA_AQUI/galeria-4.webp" alt="Público y pista en Wave Bass Rave F2F" loading="lazy" decoding="async">
-      </figure>
-      <figure class="galeria__foto" data-titulo="F2F">
-        <img src="RUTA_AQUI/galeria-5.webp" alt="Público y pista en Wave Bass Rave F2F" loading="lazy" decoding="async">
-      </figure>
-      <figure class="galeria__foto" data-titulo="F2F">
-        <img src="RUTA_AQUI/galeria-6.webp" alt="Público y pista en Wave Bass Rave F2F" loading="lazy" decoding="async">
-      </figure>
-      <figure class="galeria__foto" data-titulo="F2F">
-        <img src="RUTA_AQUI/galeria-7.webp" alt="Público y pista en Wave Bass Rave F2F" loading="lazy" decoding="async">
-      </figure>
-      <figure class="galeria__foto" data-titulo="F2F">
-        <img src="RUTA_AQUI/galeria-8.webp" alt="Público y pista en Wave Bass Rave F2F" loading="lazy" decoding="async">
-      </figure>
-      <figure class="galeria__foto" data-titulo="F2F">
-        <img src="RUTA_AQUI/galeria-9.webp" alt="Público y pista en Wave Bass Rave F2F" loading="lazy" decoding="async">
-      </figure>
-      <figure class="galeria__foto" data-titulo="F2F">
-        <img src="RUTA_AQUI/galeria-10.webp" alt="Público y pista en Wave Bass Rave F2F" loading="lazy" decoding="async">
-      </figure>
-      <figure class="galeria__foto" data-titulo="F2F">
-        <img src="RUTA_AQUI/galeria-11.webp" alt="Público y pista en Wave Bass Rave F2F" loading="lazy" decoding="async">
-      </figure>
-      <figure class="galeria__foto" data-titulo="F2F">
-        <img src="RUTA_AQUI/galeria-12.webp" alt="Público y pista en Wave Bass Rave F2F" loading="lazy" decoding="async">
-      </figure>
-    </div>
-
-  </div>
-</section>
+  </section>
 
 
-<section class="seccion" id="contacto">
-  <div class="seccion__contenido">
+  <section class="seccion" id="contacto">
+    <div class="seccion__contenido">
 
-    <div class="contacto">
-
-      <div class="aparece aparece--fijo">
+      <div class="contacto aparece aparece--fijo">
         <p class="seccion__bajada" data-en="Contact">Contacto</p>
         <h2 class="contacto__titulo" data-en="Booking, press or ticket questions — write to us.">Booking, prensa o dudas sobre entradas — escribinos.</h2>
 
         <div class="contacto__redes">
-          <a href="#">Instagram</a>
-          <a href="#">SoundCloud</a>
-          <a href="#">WhatsApp</a>
+          <a href="https://www.instagram.com/wavebassrave/" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://soundcloud.com/wavebassrave" target="_blank" rel="noopener">SoundCloud</a>
         </div>
 
         <div class="contacto__vias">
           <div class="contacto__via">
             <h3 data-en="DJ applications">Solicitudes de DJ</h3>
             <p data-en="Want to play at an upcoming event? Send us your profile, a reference set and your availability.">¿Querés tocar en un próximo evento? Mandanos tu perfil, set de referencia y disponibilidad.</p>
-            <a href="mailto:booking@wavebassrave.com">booking@wavebassrave.com</a>
+            <a href="mailto:Wavebassrave@gmail.com">Wavebassrave@gmail.com</a>
           </div>
           <div class="contacto__via">
             <h3 data-en="Demos for the label">Demos para el label</h3>
             <p data-en="Got a track for Wave Bass Rave Records? Send it in WAV or as a private link.">¿Tenés un track para Wave Bass Rave Records? Enviánoslo en WAV o link privado.</p>
-            <a href="mailto:demos@wavebassrave.com">demos@wavebassrave.com</a>
+            <a href="mailto:Wavebassrave@gmail.com">Wavebassrave@gmail.com</a>
           </div>
         </div>
       </div>
 
-      <form class="contacto__formulario aparece" onsubmit="return false;">
-        <select class="contacto__select" required>
-          <option value="" disabled selected data-en="Reason for contact">Motivo de contacto</option>
-          <option value="general" data-en="General enquiry">Consulta general</option>
-          <option value="booking" data-en="DJ application / booking">Solicitud de DJ / booking</option>
-          <option value="demo"    data-en="Send a demo to the label">Enviar demo al label</option>
-          <option value="prensa"  data-en="Press">Prensa</option>
-        </select>
-        <input class="contacto__campo" type="text"  data-en-ph="Name"  placeholder="Nombre" required>
-        <input class="contacto__campo" type="email" data-en-ph="Email" placeholder="Email" required>
-        <textarea class="contacto__mensaje" data-en-ph="Tell us more (DJs: reference set / demos: link to your track)" placeholder="Contanos más (para DJ: set de referencia / para demos: link a tu track)"></textarea>
-        <button class="contacto__enviar" type="submit" data-en="Send">Enviar</button>
-      </form>
-
     </div>
+  </section>
 
-  </div>
-</section>
+</main>
 
 
 <footer class="pie">
   <span>© 2026 Wave Bass Rave</span>
   <span data-en="Buenos Aires, Argentina">Buenos Aires, Argentina</span>
+  <a class="pie__credito" href="RUTA_CANCADO" target="_blank" rel="noopener">web by Cançado Media</a>
 </footer>
 
-<script src="script.js"></script>
+<script src="script.js" defer></script>
 </body>
 </html>

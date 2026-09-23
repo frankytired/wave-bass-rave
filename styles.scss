@@ -1,18 +1,37 @@
 // ═══════════════════════════════════════════════════════════
 // WAVE BASS RAVE — hoja de estilos
 //
-// 1. Variables    → colores, tipografías, medidas
-// 2. Placeholders → recetas reutilizables (%nombre)
-// 3. Base         → reset y estilos globales
-// 4. Secciones    → cada bloque de la página
+// Compilar con:  sass --watch styles.scss styles.css
 //
-// El HTML no lleva estilos: cada elemento tiene una clase que dice
-// qué es, y acá se define cómo se ve.
+// ORGANIZACIÓN
+//   1. Variables      tokens de diseño y breakpoints
+//   2. Placeholders   reglas compartidas, se aplican con @extend
+//   3. Base           reset y estilos de documento
+//   4. Navegación
+//   5. Portada
+//   6. Estructura de sección
+//   7. Eventos
+//   8. Academia
+//   9. Label
+//  10. Galería
+//  11. Contacto
+//  12. Pie
+//  13. Visor de galería (overlay)
+//  14. Responsive
+//
+// CRITERIO
+//   El marcado solo describe estructura. Todo el aspecto vive acá, y
+//   lo que se repite entre secciones está extraído a placeholders:
+//   modificar %boton-linea cambia los tres botones secundarios del
+//   sitio a la vez.
 // ═══════════════════════════════════════════════════════════
 
 
 // ═══ 1. VARIABLES ═══
 
+// Paleta. Los tres negros se diferencian apenas entre sí: sirven para
+// separar planos (fondo, sección alterna, tarjeta) sin introducir
+// otro color.
 $negro:         #050607;
 $negro-suave:   #0a0e11;
 $negro-card:    #10161a;
@@ -22,6 +41,11 @@ $celeste:       #5ec8f5;
 $celeste-claro: #bfeaff;
 $linea:         rgba(255, 255, 255, 0.1);
 
+// Celeste con transparencia, para bordes y fondos sutiles
+$celeste-borde: rgba(94, 200, 245, 0.4);
+$celeste-fondo: rgba(94, 200, 245, 0.1);
+$celeste-halo:  rgba(94, 200, 245, 0.15);
+
 $fuente-titulo: 'Space Grotesk', sans-serif;
 $fuente-mono:   'Space Mono', monospace;
 
@@ -29,8 +53,7 @@ $ancho-max: 1180px;
 $radio:     2px;
 $borde:     1px solid $linea;
 
-// Barra de navegación. El logo entra completo y centrado dentro
-// de la barra: el alto de la barra manda, el logo se ajusta a él.
+// Barra de navegación: el alto es fijo y el logo se ajusta a él
 $nav-alto:          78px;
 $logo-tamano:       70px;
 $logo-tamano-chico: 52px;
@@ -47,17 +70,24 @@ $transicion-lenta: 0.5s ease;
 $curva-suave:      cubic-bezier(.2, .7, .3, 1);
 
 $duracion-entrada: 0.7s;
-$duracion-fija:    0.35s; // títulos: entran rápido
+$duracion-fija:    0.35s;  // títulos: entran más rápido
 $fundido-imagen:   0.5s;
 
-$bp-grande: 900px;
-$bp-medio:  800px;
-$bp-chico:  700px;
-$bp-mini:   560px;
+// Breakpoints, de mayor a menor. Cada uno resuelve un quiebre
+// concreto del layout, no un tamaño de dispositivo.
+$bp-cuatro: 1050px;  // instructores pasan de 4 a 2 columnas
+$bp-grande:  900px;  // tablet horizontal
+$bp-medio:   800px;  // bloques de dos columnas se apilan
+$bp-menu:    780px;  // aparece el menú hamburguesa
+$bp-chico:   700px;
+$bp-mini:    560px;  // celular
+$bp-micro:   380px;  // celular chico
 
 
 // ═══ 2. PLACEHOLDERS ═══
 
+// Texto de rótulo: monoespaciado, mayúsculas, muy espaciado.
+// Es el recurso que unifica fechas, etiquetas, botones y pies.
 %texto-etiqueta {
   font-family: $fuente-mono;
   font-size: 0.72rem;
@@ -66,8 +96,9 @@ $bp-mini:   560px;
   color: $gris;
 }
 
-// Contenedor de imagen: recorta sin deformar. La imagen arranca
-// invisible y el JS le pone .cargada cuando termina de bajar.
+// Contenedor de imagen con recorte. La imagen arranca en opacity 0 y
+// script.js le agrega .cargada al terminar la descarga, para que no
+// aparezca de golpe sobre el fondo del contenedor.
 %caja-media {
   position: relative;
   overflow: hidden;
@@ -86,6 +117,7 @@ $bp-mini:   560px;
   img.cargada { opacity: 1; }
 }
 
+// Acción principal: fondo sólido celeste
 %boton {
   @extend %texto-etiqueta;
   display: inline-flex;
@@ -106,7 +138,8 @@ $bp-mini:   560px;
   }
 }
 
-// Botón secundario: solo contorno, para acciones de menor jerarquía
+// Acción secundaria: solo contorno. Se usa en los botones que se
+// repiten dentro de listados (fotos, cursos, Spotify).
 %boton-linea {
   @extend %texto-etiqueta;
   display: inline-flex;
@@ -114,14 +147,14 @@ $bp-mini:   560px;
   gap: 8px;
   width: fit-content;
   padding: 9px 18px;
-  border: 1px solid rgba(94, 200, 245, 0.4);
+  border: 1px solid $celeste-borde;
   border-radius: $radio;
   color: $celeste;
   cursor: pointer;
   transition: background $transicion, border-color $transicion;
 
   &:hover {
-    background: rgba(94, 200, 245, 0.1);
+    background: $celeste-fondo;
     border-color: $celeste;
   }
 }
@@ -131,16 +164,11 @@ $bp-mini:   560px;
   display: inline-block;
   width: fit-content;
   padding: 5px 12px;
-  border: $borde;
-  color: $blanco;
-}
-
-%pastilla-celeste {
-  @extend %pastilla;
-  border-color: $celeste;
+  border: 1px solid $celeste;
   color: $celeste;
 }
 
+// Bloque destacado: media a un lado, texto al otro
 %bloque-destacado {
   display: grid;
   border: $borde;
@@ -158,6 +186,7 @@ $bp-mini:   560px;
   gap: 16px;
 }
 
+// Tarjeta vertical de un listado
 %tarjeta {
   display: flex;
   flex-direction: column;
@@ -167,34 +196,13 @@ $bp-mini:   560px;
   &:hover img { transform: scale(1.06); }
 }
 
-%grilla-3 {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: $gap-medio;
-
-  @media (max-width: $bp-grande) { grid-template-columns: repeat(2, 1fr); }
-  @media (max-width: $bp-mini)   { grid-template-columns: 1fr; }
-}
-
-%campo {
-  background: transparent;
-  border: none;
-  border-bottom: $borde;
-  padding: 12px 2px;
-  color: $blanco;
-  font-family: $fuente-titulo;
-  font-size: 1rem;
-
-  &::placeholder { color: $gris; }
-  &:focus { border-color: $celeste; outline: none; }
-}
-
 
 // ═══ 3. BASE ═══
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 
+// Respeta la preferencia del sistema de reducir animaciones
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
@@ -206,6 +214,9 @@ body {
   font-family: $fuente-titulo;
   line-height: 1.5;
   overflow-x: hidden;
+  // Impide que una palabra larga (un mail, una URL) ensanche la
+  // página y habilite scroll horizontal
+  overflow-wrap: break-word;
 }
 
 a  { color: inherit; text-decoration: none; }
@@ -215,6 +226,25 @@ img, video { display: block; max-width: 100%; }
 ::selection    { background: $celeste; color: $negro; }
 :focus-visible { outline: 2px solid $celeste; outline-offset: 3px; }
 
+// Enlace de salto: fuera de pantalla hasta recibir foco por teclado
+.salto {
+  @extend %texto-etiqueta;
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  z-index: 300;
+  padding: 12px 20px;
+  background: $celeste;
+  color: $negro;
+  transition: top 0.2s ease;
+
+  &:focus { top: 16px; }
+}
+
+// Animación de entrada al scrollear. script.js agrega .visible una
+// sola vez, cuando el elemento asoma, y deja de observarlo: no hay
+// animación de salida porque desestabiliza la lectura y obliga al
+// navegador a recalcular en cada cuadro del scroll.
 .aparece {
   opacity: 0;
   transform: translateY(28px);
@@ -226,11 +256,10 @@ img, video { display: block; max-width: 100%; }
   &.visible {
     opacity: 1;
     transform: translateY(0);
-    transition-duration: $duracion-entrada;
   }
 
-  // Los títulos entran rápido, sin cascada y sin desplazarse tanto:
-  // si tardan, uno pierde la referencia de en qué sección está.
+  // Variante para títulos: entran antes, más rápido y sin cascada,
+  // para que no se pierda la referencia de en qué sección se está.
   &--fijo {
     transform: translateY(12px);
     transition-duration: $duracion-fija;
@@ -251,11 +280,15 @@ img, video { display: block; max-width: 100%; }
   align-items: center;
   justify-content: space-between;
   padding: 0 clamp(20px, 5vw, 48px);
-  // Sin desenfoque: en una barra fija es el efecto más caro durante
-  // el scroll. Se compensa con un degradé más opaco.
-  background: linear-gradient(to bottom, rgba(5, 6, 7, 0.96), rgba(5, 6, 7, 0.75) 60%, transparent);
+  // Degradé en lugar de backdrop-filter: el desenfoque en un elemento
+  // fijo se recalcula en cada cuadro y encarece mucho el scroll.
+  background: linear-gradient(
+    to bottom,
+    rgba(5, 6, 7, 0.96),
+    rgba(5, 6, 7, 0.75) 60%,
+    transparent
+  );
 
-  // El logo queda centrado verticalmente dentro de la barra
   &__logo {
     display: block;
     width: $logo-tamano;
@@ -270,11 +303,44 @@ img, video { display: block; max-width: 100%; }
     }
   }
 
+  &__acciones {
+    display: flex;
+    align-items: center;
+    gap: $gap-chico;
+  }
+
+  // 44px es el área mínima recomendada para un objetivo táctil
+  &__menu-boton {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    padding: 0 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+
+    span {
+      display: block;
+      height: 2px;
+      width: 100%;
+      background: $blanco;
+      transition: transform 0.3s ease, opacity 0.2s ease;
+    }
+
+    // Las tres barras forman una X cuando el panel está abierto.
+    // El estado se lee de aria-expanded para no duplicarlo en una
+    // clase: el atributo ya es necesario por accesibilidad.
+    &[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    &[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+    &[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  }
+
   &__menu {
     display: flex;
     gap: clamp(16px, 3vw, 36px);
-
-    @media (max-width: 780px) { display: none; }
 
     a {
       @extend %texto-etiqueta;
@@ -284,7 +350,7 @@ img, video { display: block; max-width: 100%; }
 
       &:hover { color: $blanco; }
 
-      // Subrayado que crece desde el centro hacia los lados
+      // Subrayado que crece desde el centro hacia ambos lados
       &::after {
         content: '';
         position: absolute;
@@ -320,6 +386,7 @@ img, video { display: block; max-width: 100%; }
 .portada {
   position: relative;
   height: 100vh;
+  height: 100svh;  // svh descuenta la barra del navegador en móvil
   width: 100%;
   display: flex;
   align-items: flex-end;
@@ -342,6 +409,8 @@ img, video { display: block; max-width: 100%; }
     object-fit: cover;
   }
 
+  // Capa de color sobre el video: garantiza contraste para el texto
+  // sea cual sea el fotograma, y unifica el material con la paleta.
   &__velo {
     position: absolute;
     inset: 0;
@@ -365,8 +434,9 @@ img, video { display: block; max-width: 100%; }
     animation: subirTexto 0.9s $curva-suave 0.4s backwards;
   }
 
-  // El título no tiene resplandor: lleva un reflejo metálico que
-  // recorre las letras muy lentamente, apenas perceptible.
+  // El degradé se recorta contra el texto (background-clip) y se
+  // desplaza muy lento: produce un reflejo metálico continuo sin el
+  // aspecto amateur de un text-shadow.
   &__titulo {
     font-size: clamp(2.6rem, 10vw, 7.5rem);
     font-weight: 700;
@@ -387,7 +457,6 @@ img, video { display: block; max-width: 100%; }
       reflejoTitulo 9s ease-in-out 1.5s infinite;
   }
 
-  // Línea que se despliega debajo del título
   &__linea {
     display: block;
     height: 1px;
@@ -401,26 +470,17 @@ img, video { display: block; max-width: 100%; }
 
   &__datos {
     @extend %texto-etiqueta;
-    display: flex;
-    flex-wrap: wrap;
-    gap: $gap-medio;
     margin-top: $gap-medio;
     color: $blanco;
     animation: subirTexto 0.9s $curva-suave 1.2s backwards;
-
-    span + span { color: $gris; }
   }
 }
 
+// backwards mantiene el estado inicial durante el retraso, para que
+// los elementos no parpadeen antes de empezar su animación.
 @keyframes aparecerPortada { to { opacity: 1; } }
-
-@keyframes subirTexto {
-  from { opacity: 0; transform: translateY(24px); }
-}
-
-@keyframes desplegarLinea {
-  from { transform: scaleX(0); }
-}
+@keyframes subirTexto      { from { opacity: 0; transform: translateY(24px); } }
+@keyframes desplegarLinea  { from { transform: scaleX(0); } }
 
 @keyframes reflejoTitulo {
   0%, 100% { background-position: 100% 0; }
@@ -429,17 +489,17 @@ img, video { display: block; max-width: 100%; }
 
 
 // ═══ 6. ESTRUCTURA DE SECCIÓN ═══
-// Las secciones alternan fondo y llevan un separador degradado,
-// para que la página no se lea como un bloque plano.
 
 .seccion {
   position: relative;
   padding: $padding-seccion 0;
   background: $negro;
 
+  // Fondos alternos mediante nth-of-type: evita clases extra en el
+  // marcado y se reacomoda solo si se agrega o quita una sección.
   &:nth-of-type(even) { background: $negro-suave; }
 
-  // Separador: línea que se desvanece hacia los costados
+  // Separador que se desvanece hacia los costados
   &::before {
     content: '';
     position: absolute;
@@ -479,8 +539,6 @@ img, video { display: block; max-width: 100%; }
     @extend %texto-etiqueta;
     max-width: 260px;
     text-align: right;
-
-    @media (max-width: $bp-chico) { text-align: left; }
   }
 
   &__subtitulo {
@@ -496,8 +554,8 @@ img, video { display: block; max-width: 100%; }
   @extend %bloque-destacado;
   grid-template-columns: 1.1fr 1fr;
 
-  // Llena toda la altura de la fila y encuadra por el centro, así
-  // no queda desalineada respecto del bloque de texto
+  // height: 100% hace que la imagen iguale la altura de la columna de
+  // texto; sin eso, aspect-ratio deja un desfasaje entre ambas.
   &__imagen {
     @extend %caja-media;
     height: 100%;
@@ -513,15 +571,16 @@ img, video { display: block; max-width: 100%; }
     }
   }
 
-  &__info { @extend %bloque-destacado-texto; }
-  &__etiqueta { @extend %pastilla-celeste; }
-  &__fecha { @extend %texto-etiqueta; }
+  &__info     { @extend %bloque-destacado-texto; }
+  &__etiqueta { @extend %pastilla; }
+  &__fecha    { @extend %texto-etiqueta; }
 
   &__nombre {
     font-size: clamp(1.6rem, 3vw, 2.4rem);
     font-weight: 700;
   }
 
+  // 46ch limita la línea a una longitud legible
   &__descripcion {
     color: $gris;
     max-width: 46ch;
@@ -533,6 +592,10 @@ img, video { display: block; max-width: 100%; }
   }
 }
 
+// Las divisorias se dibujan como borde de cada fila. El patrón
+// alternativo (fondo del contenedor visible por un gap de 1px) falla
+// cuando las filas están en opacity 0 durante la animación de
+// entrada: se ve el fondo completo como un bloque.
 .eventos-pasados {
   border: $borde;
 
@@ -548,11 +611,6 @@ img, video { display: block; max-width: 100%; }
     &:last-child { border-bottom: none; }
     &:hover { background: rgba(255, 255, 255, 0.02); }
     &:hover img { transform: scale(1.06); }
-
-    @media (max-width: $bp-chico) {
-      grid-template-columns: 56px 1fr;
-      row-gap: 12px;
-    }
   }
 
   &__imagen {
@@ -576,20 +634,104 @@ img, video { display: block; max-width: 100%; }
     margin-top: 2px;
   }
 
-  &__fotos {
-    @extend %boton-linea;
-
-    @media (max-width: $bp-chico) { grid-column: 1 / -1; }
-  }
+  &__fotos { @extend %boton-linea; }
 }
 
 
 // ═══ 8. ACADEMIA ═══
 
-.profesores {
-  @extend %grilla-3;
+// Texto de captación: cuerpo e interlineado mayores que el resto del
+// sitio, porque es el bloque que se espera que se lea completo.
+.academia-intro {
+  max-width: 58ch;
+  margin-bottom: clamp(40px, 6vh, 64px);
 
-  @media (max-width: $bp-grande) { grid-template-columns: 1fr; }
+  &__marca {
+    @extend %texto-etiqueta;
+    color: $celeste;
+    margin-bottom: 14px;
+  }
+
+  &__titulo {
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 700;
+    line-height: 1.25;
+    margin-bottom: 24px;
+  }
+
+  &__lead {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: $gris;
+    margin-bottom: 18px;
+
+    &:last-child { margin-bottom: 0; }
+  }
+}
+
+.academia-bloques {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(20px, 2.5vw, 32px);
+  margin-bottom: clamp(64px, 10vh, 110px);
+
+  @media (max-width: $bp-medio) { grid-template-columns: 1fr; }
+}
+
+.academia-bloque {
+  background: $negro-card;
+  border: $borde;
+  border-top: 2px solid $celeste;
+  padding: clamp(26px, 3vw, 36px);
+
+  &__titulo {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  &__bajada {
+    color: $gris;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+
+  &__items {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    li {
+      position: relative;
+      padding-left: 30px;
+      color: $gris;
+      font-size: 0.97rem;
+      line-height: 1.6;
+
+      // Viñeta propia: punto celeste con halo. El box-shadow de radio
+      // 0 y spread 4px dibuja el halo sin un elemento adicional.
+      &::before {
+        content: '';
+        position: absolute;
+        left: 2px; top: 0.45em;
+        width: 9px; height: 9px;
+        border-radius: 50%;
+        background: $celeste;
+        box-shadow: 0 0 0 4px $celeste-halo;
+      }
+    }
+  }
+}
+
+.academia-instructores { margin-bottom: 24px; }
+
+.profesores {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $gap-medio;
+
+  @media (max-width: $bp-cuatro) { grid-template-columns: repeat(2, 1fr); }
 }
 
 .profesor {
@@ -631,7 +773,13 @@ img, video { display: block; max-width: 100%; }
 
 // ═══ 9. LABEL ═══
 
-.lanzamientos { @extend %grilla-3; }
+.lanzamientos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $gap-medio;
+
+  @media (max-width: $bp-grande) { grid-template-columns: repeat(2, 1fr); }
+}
 
 .lanzamiento {
   @extend %tarjeta;
@@ -647,7 +795,7 @@ img, video { display: block; max-width: 100%; }
     border-radius: $radio;
   }
 
-  &__titulo { font-weight: 700; }
+  &__titulo  { font-weight: 700; }
   &__artista { @extend %texto-etiqueta; }
 
   &__boton {
@@ -658,9 +806,10 @@ img, video { display: block; max-width: 100%; }
 
 
 // ═══ 10. GALERÍA ═══
-// Mosaico irregular: algunas fotos ocupan el doble de ancho o de
-// alto, siguiendo un patrón que se repite cada 6 imágenes.
 
+// Mosaico irregular con un patrón que se repite cada 6 fotos. Con
+// grid-auto-flow: dense, las piezas chicas rellenan los huecos que
+// dejan las grandes, así que agregar o quitar figure no rompe nada.
 .galeria {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -674,11 +823,12 @@ img, video { display: block; max-width: 100%; }
   &__foto {
     @extend %caja-media;
     border-radius: $radio;
-    // Aísla cada foto: el navegador no recalcula toda la grilla
-    // cuando una hace zoom
+    cursor: zoom-in;
+    // Aísla el repintado de cada foto: el zoom de una no obliga a
+    // recalcular el resto de la grilla
     contain: paint;
 
-    // Título de la foto, oculto hasta pasar el mouse
+    // Rótulo tomado del atributo data-titulo del marcado
     &::after {
       content: attr(data-titulo);
       @extend %texto-etiqueta;
@@ -691,7 +841,7 @@ img, video { display: block; max-width: 100%; }
       transition: opacity $transicion, transform $transicion;
     }
 
-    // Velo oscuro que aparece con el título
+    // Velo que acompaña al rótulo y le da contraste
     &::before {
       content: '';
       position: absolute;
@@ -704,11 +854,10 @@ img, video { display: block; max-width: 100%; }
 
     &:hover {
       img { transform: scale(1.07); }
-      &::after { opacity: 1; transform: translateY(0); }
+      &::after  { opacity: 1; transform: translateY(0); }
       &::before { opacity: 1; }
     }
 
-    // Patrón del mosaico
     &:nth-child(6n + 1) { grid-column: span 2; grid-row: span 2; }
     &:nth-child(6n + 4) { grid-row: span 2; }
     &:nth-child(6n + 5) { grid-column: span 2; }
@@ -725,11 +874,7 @@ img, video { display: block; max-width: 100%; }
 // ═══ 11. CONTACTO ═══
 
 .contacto {
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: clamp(32px, 6vw, 80px);
-
-  @media (max-width: $bp-medio) { grid-template-columns: 1fr; }
+  max-width: 720px;
 
   &__titulo {
     font-size: clamp(1.4rem, 3vw, 2rem);
@@ -751,10 +896,12 @@ img, video { display: block; max-width: 100%; }
   }
 
   &__vias {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 16px;
     margin-top: 32px;
+
+    @media (max-width: $bp-mini) { grid-template-columns: 1fr; }
   }
 
   &__via {
@@ -762,7 +909,7 @@ img, video { display: block; max-width: 100%; }
     padding: 18px 20px;
     transition: border-color $transicion;
 
-    &:hover { border-color: rgba(94, 200, 245, 0.4); }
+    &:hover { border-color: $celeste-borde; }
 
     h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
     p  { color: $gris; font-size: 0.88rem; margin-bottom: 10px; }
@@ -772,32 +919,6 @@ img, video { display: block; max-width: 100%; }
       color: $celeste;
     }
   }
-
-  &__formulario {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  &__campo { @extend %campo; }
-
-  &__select {
-    @extend %campo;
-    appearance: none;
-    background-color: $negro;
-
-    option { background: $negro; color: $blanco; }
-  }
-
-  &__mensaje {
-    @extend %campo;
-    border: $borde;
-    padding: 12px;
-    resize: vertical;
-    min-height: 90px;
-  }
-
-  &__enviar { @extend %boton; }
 }
 
 
@@ -808,7 +929,333 @@ img, video { display: block; max-width: 100%; }
   padding: 32px clamp(20px, 5vw, 48px) 48px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   flex-wrap: wrap;
   gap: $gap-chico;
   border-top: $borde;
+
+  // Crédito de autoría: presente pero en segundo plano, se revela al
+  // acercar el cursor
+  &__credito {
+    @extend %texto-etiqueta;
+    opacity: 0.25;
+    letter-spacing: 0.12em;
+    transition: opacity 0.35s ease, color 0.35s ease;
+
+    &:hover,
+    &:focus-visible {
+      opacity: 1;
+      color: $celeste;
+    }
+
+    @media (hover: none) { opacity: 0.5; }
+  }
+}
+
+
+// ═══ 13. VISOR DE GALERÍA ═══
+// El elemento lo inyecta script.js: existe solo para esta
+// interacción y no forma parte del contenido del documento.
+
+// Bloquea el scroll del fondo mientras el visor está abierto
+.sin-scroll { overflow: hidden; }
+
+.visor {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 4vw, 48px);
+  background: rgba(5, 6, 7, 0.95);
+  backdrop-filter: blur(6px);
+
+  // visibility acompaña a opacity para que el overlay no intercepte
+  // clics mientras está oculto
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s;
+
+  &--abierto { opacity: 1; visibility: visible; }
+
+  &__imagen {
+    max-width: 100%;
+    max-height: 85vh;
+    max-height: 85svh;
+    object-fit: contain;
+    border-radius: $radio;
+    transform: scale(0.96);
+    transition: transform 0.3s ease;
+  }
+
+  &--abierto &__imagen { transform: scale(1); }
+
+  button {
+    position: absolute;
+    background: transparent;
+    border: none;
+    color: $blanco;
+    cursor: pointer;
+    line-height: 1;
+    opacity: 0.7;
+    transition: opacity 0.2s ease, color 0.2s ease;
+
+    &:hover { opacity: 1; color: $celeste; }
+  }
+
+  &__cerrar {
+    top: 16px; right: 20px;
+    font-size: 2.4rem;
+    width: 48px; height: 48px;
+  }
+
+  &__anterior,
+  &__siguiente {
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 3rem;
+    width: 56px; height: 56px;
+  }
+
+  &__anterior  { left: 8px; }
+  &__siguiente { right: 8px; }
+
+  &__contador {
+    @extend %texto-etiqueta;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  // En móvil los controles bajan: en los bordes laterales compiten
+  // con los gestos de navegación del sistema.
+  @media (max-width: $bp-mini) {
+    &__imagen { max-height: 70svh; }
+
+    &__anterior,
+    &__siguiente {
+      top: auto;
+      bottom: 16px;
+      transform: none;
+      font-size: 2.4rem;
+    }
+
+    &__anterior  { left: 24px; }
+    &__siguiente { right: 24px; }
+    &__contador  { bottom: 30px; }
+  }
+}
+
+
+// ═══ 14. RESPONSIVE ═══
+
+// En pantallas táctiles el navegador simula un :hover que queda
+// aplicado tras el toque. Se neutralizan los efectos y se muestra de
+// entrada lo que en escritorio se revela con el cursor.
+@media (hover: none) {
+  .galeria__foto {
+    &::before, &::after { opacity: 1; }
+    &::after { transform: translateY(0); }
+  }
+
+  .profesor:hover img,
+  .lanzamiento:hover img,
+  .galeria__foto:hover img,
+  .eventos-pasados__item:hover img,
+  .evento-destacado__imagen:hover img { transform: none; }
+
+  .evento-destacado__boton:hover { transform: none; box-shadow: none; }
+}
+
+
+@media (max-width: $bp-menu) {
+  .nav__menu-boton { display: flex; }
+
+  // El menú horizontal pasa a panel desplegable bajo la barra
+  .nav__menu {
+    position: fixed;
+    top: $nav-alto;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: 0;
+    padding: 8px clamp(20px, 5vw, 48px) 24px;
+    background: $negro;
+    border-bottom: $borde;
+
+    transform: translateY(-12px);
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.28s ease, opacity 0.28s ease, visibility 0.28s;
+
+    &--abierto {
+      transform: translateY(0);
+      opacity: 1;
+      visibility: visible;
+    }
+
+    li {
+      border-bottom: $borde;
+      &:last-child { border-bottom: none; }
+    }
+
+    a {
+      display: block;
+      padding: 16px 0;
+      font-size: 0.8rem;
+
+      // En lista vertical el subrayado arranca desde la izquierda
+      &::after { left: 0; transform: none; }
+    }
+  }
+}
+
+
+@media (max-width: $bp-grande) {
+  .seccion__encabezado {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .seccion__nota { max-width: 100%; text-align: left; }
+}
+
+
+@media (max-width: $bp-chico) {
+  // Las filas de eventos pierden las dos columnas intermedias
+  .eventos-pasados__item {
+    grid-template-columns: 56px 1fr;
+    row-gap: 12px;
+  }
+
+  .eventos-pasados__fotos { grid-column: 1 / -1; }
+}
+
+
+@media (max-width: $bp-mini) {
+  // Menos aire vertical: el espaciado de escritorio obliga a
+  // scrollear de más entre secciones
+  .seccion { padding: clamp(56px, 9vh, 80px) 0; }
+
+  .portada {
+    &__texto { padding-bottom: clamp(36px, 6vh, 56px); }
+    &__linea { max-width: 200px; margin-top: 16px; }
+    &__datos { margin-top: 20px; }
+  }
+
+  // Las filas se apilan centradas
+  .eventos-pasados {
+    &__item {
+      grid-template-columns: 1fr;
+      justify-items: center;
+      text-align: center;
+      gap: 10px;
+      padding: 24px 16px;
+    }
+
+    &__imagen { width: 88px; }
+    &__fecha  { margin-top: 4px; }
+    &__nombre { font-size: 1rem; }
+
+    &__fotos {
+      grid-column: auto;
+      width: 100%;
+      justify-content: center;
+      padding: 12px 18px;
+      margin-top: 6px;
+    }
+  }
+
+  // El flyer se acota y se centra, con el texto debajo: a ancho
+  // completo ocupaba media pantalla antes del primer renglón
+  .evento-destacado {
+    grid-template-columns: 1fr;
+    padding-top: 24px;
+
+    &__imagen {
+      width: 100%;
+      max-width: 260px;
+      margin: 0 auto;
+      aspect-ratio: 4/5;
+      height: auto;
+      min-height: 0;
+    }
+
+    &__info        { padding: 24px 20px 28px; gap: 12px; }
+    &__nombre      { font-size: 1.35rem; }
+    &__descripcion { font-size: 0.95rem; }
+    &__boton       { width: 100%; justify-content: center; padding: 14px 26px; }
+  }
+
+  // Dos columnas en lugar de una: a una sola, cada tarjeta superaba
+  // el alto de la pantalla
+  .profesores,
+  .lanzamientos {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  .lanzamiento { padding: 14px; }
+  .profesor__foto { aspect-ratio: 1; }
+  .profesor__nombre { font-size: 1.05rem; }
+
+  .profesor__bio,
+  .lanzamiento__titulo { font-size: 0.9rem; }
+
+  .profesor__boton,
+  .lanzamiento__boton {
+    width: 100%;
+    justify-content: center;
+    padding: 10px 12px;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+  }
+
+  .galeria { grid-auto-rows: 120px; gap: 6px; }
+
+  .academia-bloque { padding: 24px 20px; }
+  .academia-intro__lead { font-size: 1rem; }
+
+  .contacto__redes { flex-wrap: wrap; gap: 14px 20px; }
+
+  .pie {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+
+@media (max-width: $bp-micro) {
+  .nav__idioma { padding: 6px 8px; letter-spacing: 0.1em; }
+
+  // Una columna, con la imagen acotada para que la tarjeta entre
+  // completa en pantalla
+  .profesores,
+  .lanzamientos { grid-template-columns: 1fr; }
+
+  .profesor__foto,
+  .lanzamiento__tapa {
+    max-width: 220px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .profesor,
+  .lanzamiento { text-align: center; }
+
+  .profesor__boton,
+  .lanzamiento__boton { margin-left: auto; margin-right: auto; }
+
+  .galeria {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 200px;
+
+    &__foto:nth-child(6n + 1),
+    &__foto:nth-child(6n + 5) { grid-column: span 1; }
+  }
 }
