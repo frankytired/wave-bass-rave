@@ -1205,13 +1205,21 @@ img, video { display: block; max-width: 100%; }
   .profesor__bio,
   .lanzamiento__titulo { font-size: 0.9rem; }
 
+  // Las etiquetas largas ("Escuchar en Spotify") no entran en una
+  // línea dentro de una tarjeta a media pantalla. En lugar de
+  // achicar más la tipografía, se deja que el texto pase a dos
+  // líneas repartidas de forma pareja: text-wrap: balance iguala el
+  // largo de ambas en vez de dejar una palabra suelta abajo.
   .profesor__boton,
   .lanzamiento__boton {
     width: 100%;
     justify-content: center;
-    padding: 10px 12px;
+    padding: 11px 10px;
     font-size: 0.62rem;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
+    text-align: center;
+    text-wrap: balance;
+    line-height: 1.5;
   }
 
   .galeria { grid-auto-rows: 120px; gap: 6px; }

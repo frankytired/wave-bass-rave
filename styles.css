@@ -1058,9 +1058,12 @@ img, video {
   .lanzamiento__boton {
     width: 100%;
     justify-content: center;
-    padding: 10px 12px;
+    padding: 11px 10px;
     font-size: 0.62rem;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
+    text-align: center;
+    text-wrap: balance;
+    line-height: 1.5;
   }
   .galeria {
     grid-auto-rows: 120px;
