@@ -14,8 +14,9 @@
  *   2. Video de portada
  *   3. Fundido de imágenes
  *   4. Visor de galería
- *   5. Menú móvil
- *   6. Traductor ES / EN
+ *   5. Videos de YouTube
+ *   6. Menú móvil
+ *   7. Traductor ES / EN
  */
 
 
@@ -193,7 +194,79 @@ if (fotos.length) {
 }
 
 
-/* ── 5. Menú móvil ──────────────────────────────────────────
+/* ── 5. Videos de YouTube ────────────────────────────────────
+ *
+ * Fachada: cada tarjeta muestra la miniatura que YouTube publica de
+ * forma abierta y recién al hacer clic se inserta el reproductor.
+ * Un iframe de YouTube arrastra cerca de un megabyte de scripts y
+ * cookies de seguimiento; con cuatro videos cargando de entrada, la
+ * página se vuelve pesada antes de que nadie mire ninguno.
+ *
+ * No se usa la API de datos de YouTube: pediría una clave que en un
+ * sitio estático queda visible en el código fuente.
+ */
+
+// Acepta el ID solo o cualquier forma de link de YouTube: watch?v=,
+// youtu.be/, shorts/, embed/ o live/. Así se puede pegar en el HTML
+// el link tal cual se copia del navegador o de la app.
+const extraerId = (valor = '') => {
+  const texto = valor.trim();
+
+  // Un ID de YouTube son siempre 11 caracteres: letras, números, - y _
+  if (/^[\w-]{11}$/.test(texto)) return texto;
+
+  const coincidencia = texto.match(/(?:v=|youtu\.be\/|shorts\/|embed\/|live\/)([\w-]{11})/);
+  return coincidencia ? coincidencia[1] : null;
+};
+
+document.querySelectorAll('.video').forEach((tarjeta) => {
+  const id = extraerId(tarjeta.dataset.video);
+
+  if (!id) {
+    console.warn('Video sin un ID de YouTube válido:', tarjeta.dataset.video);
+    return;
+  }
+
+  const titulo = tarjeta.querySelector('.video__titulo');
+
+  const marco = document.createElement('div');
+  marco.className = 'video__marco';
+  marco.setAttribute('role', 'button');
+  marco.tabIndex = 0;
+  marco.setAttribute('aria-label', `Reproducir: ${titulo ? titulo.textContent : 'video'}`);
+
+  // hqdefault existe para todo video; maxresdefault no siempre, y
+  // cuando falta YouTube devuelve una imagen gris de 120px.
+  marco.innerHTML = `
+    <img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="" loading="lazy" decoding="async">
+    <span class="video__play" aria-hidden="true"></span>`;
+
+  tarjeta.prepend(marco);
+
+  const reproducir = () => {
+    const iframe = document.createElement('iframe');
+    // autoplay=1 porque el clic ya es la intención de reproducir
+    iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
+    iframe.title = titulo ? titulo.textContent : 'Video';
+    iframe.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture';
+    iframe.allowFullscreen = true;
+
+    marco.replaceChildren(iframe);
+    marco.removeAttribute('role');
+    marco.removeAttribute('tabindex');
+  };
+
+  marco.addEventListener('click', reproducir);
+  marco.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+
+    e.preventDefault();
+    reproducir();
+  });
+});
+
+
+/* ── 6. Menú móvil ──────────────────────────────────────────
  *
  * aria-expanded cumple dos funciones: informa el estado a los
  * lectores de pantalla y le sirve al CSS como selector para
@@ -245,7 +318,7 @@ if (menuBoton && menu) {
 }
 
 
-/* ── 6. Traductor ES / EN ───────────────────────────────────
+/* ── 7. Traductor ES / EN ───────────────────────────────────
  *
  * Las traducciones viven junto al contenido, en atributos del propio
  * elemento, en lugar de un diccionario aparte: así un texto nuevo se
