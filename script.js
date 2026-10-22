@@ -241,6 +241,12 @@ document.querySelectorAll('.video').forEach((tarjeta) => {
     <img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="" loading="lazy" decoding="async">
     <span class="video__play" aria-hidden="true"></span>`;
 
+  // Estas miniaturas se crean después del fundido inicial de imágenes.
+  const miniatura = marco.querySelector('img');
+  const revelarMiniatura = () => miniatura.classList.add('cargada');
+  miniatura.addEventListener('load', revelarMiniatura, { once: true });
+  if (miniatura.complete && miniatura.naturalWidth > 0) revelarMiniatura();
+
   tarjeta.prepend(marco);
 
   const reproducir = () => {

@@ -1,0 +1,30 @@
+CAMBIOS PARA FRANKIE — WAVE BASS RAVE
+22 de octubre de 2026
+
+Reemplazar index.html y script.js en la raíz del repositorio frankytired/wave-bass-rave por los dos archivos incluidos. Mantener el resto de los archivos actuales, incluidos styles.css, Multimedia/, RUTA_AQUI/ y CNAME.
+
+Cambios incluidos:
+- Los cuatro botones «Ver curso» llevan al formulario de inscripción de Wave Academy y abren en otra pestaña.
+- Se corrigió la aparición de las miniaturas de YouTube: las imágenes creadas por JavaScript reciben la clase de visibilidad al cargarse.
+- index.html usa script.js?v=miniaturas-1 para actualizar la copia guardada en el navegador.
+- La galería queda igual.
+
+VIDEOS, EN ORDEN:
+1. Franky Shit F2F Asat — SPiCK2vlHus (sin cambios).
+2. Banger B2B Soma (Radio Underground PR) — 8d8fpZdXK1U.
+3. Soma Visita La Paz, Bolivia (Massiv - SubRoom) — -2DdIOrQmx4.
+4. Wave Academy 2026 — 593jk4nw1j4.
+
+El reproductor conserva su comportamiento original: reproduce desde el inicio del video. Las marcas de tiempo de los enlaces compartidos no se trasladan al reproductor incrustado.
+
+FORMULARIO PARA ALUMNOS:
+https://docs.google.com/forms/d/1HkdOC2VC2nu3V9DlWH6Ju4hWfb2PltVqQ0poLP2k56o/viewform
+
+ANTES DE PUBLICAR:
+Revisar los cambios frente a la versión actual del repositorio para conservar cualquier modificación posterior de Frankie. Comprobar que abran los cuatro botones de cursos, que aparezcan las miniaturas y que los videos puedan reproducirse en YouTube.
+
+PENDIENTES CONOCIDOS:
+Siguen los enlaces originales sin completar para fotos de eventos, redes, WhatsApp y crédito del sitio (RUTA_*). Los correos de booking y demos están en el diseño, pero no se comprobó que existan los buzones.
+
+ESTADO DEL DOMINIO:
+No se modificó WordPress, GitHub ni DNS. La web pública sigue en WordPress. El archivo CNAME original indica wavebassrave.com; la conexión del dominio se hará por separado, con aprobación del usuario.
