@@ -1113,9 +1113,6 @@ img, video {
   .lanzamiento {
     padding: 14px;
   }
-  .profesor__foto {
-    aspect-ratio: 1;
-  }
   .profesor__nombre {
     font-size: 1.05rem;
   }
