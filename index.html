@@ -182,8 +182,8 @@
 
 <main id="contenido">
 
-  <!-- El atributo src del video lo asigna script.js solo en pantallas
-       grandes: en móvil queda el poster para no descargar el archivo. -->
+  <!-- El src del video lo asigna script.js: así se omite si el
+       sistema pide reducir movimiento y se pausa fuera de pantalla. -->
   <header class="portada" id="portada">
     <div class="portada__fondo">
       <video class="portada__video" id="video-portada"

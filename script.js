@@ -73,18 +73,24 @@ elementos.forEach((el) => observador.observe(el));
 
 /* ── 2. Video de portada ────────────────────────────────────
  *
- * El src se asigna desde acá y no en el marcado: en pantallas chicas
- * el archivo no se descarga y queda el poster. El video pesa varios
- * MB, se consume sobre datos móviles y bajo el velo de color aporta
- * poco en esa resolución.
+ * El src se asigna desde acá para poder omitir el video cuando el
+ * sistema pide reducir movimiento: en ese caso queda el poster.
+ * Fuera de pantalla se pausa: deja de decodificar cuadros que nadie
+ * ve y el scroll por el resto del sitio queda libre.
  */
 
 const video = document.getElementById('video-portada');
-const pantallaChica = window.matchMedia('(max-width: 780px)').matches;
+const sinMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-if (video && !pantallaChica) {
+if (video && !sinMovimiento) {
   video.src = video.dataset.video;
-  video.load();
+
+  new IntersectionObserver(([entrada]) => {
+    // play() devuelve una promesa que se rechaza si el navegador
+    // bloquea la reproducción (ahorro de batería): queda el poster
+    if (entrada.isIntersecting) video.play().catch(() => {});
+    else video.pause();
+  }).observe(video);
 }
 
 
