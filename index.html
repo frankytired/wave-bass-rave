@@ -149,6 +149,41 @@
 
 <!-- Enlace de salto: primer elemento enfocable de la página, permite
      a quien navega con teclado evitar el menú en cada recarga. -->
+<!-- Pantalla de carga: cubre el sitio hasta que cargan las imágenes
+     principales. script.js (módulo 9) actualiza el porcentaje y la
+     retira; si el script no corre, el CSS la oculta a los 8 segundos.
+     Es decorativa, por eso queda fuera de los lectores de pantalla. -->
+<div class="cargador" id="cargador" aria-hidden="true">
+  <div class="cargador__grilla"></div>
+  <div class="cargador__marco"></div>
+
+  <p class="cargador__marca">Wave Bass Rave</p>
+  <p class="cargador__coordenadas">Buenos Aires · 34°36′S 58°22′O</p>
+  <p class="cargador__lema">Bass Music Culture Since 2016</p>
+  <p class="cargador__sitio">wavebassrave.com</p>
+
+  <div class="cargador__centro">
+    <div class="cargador__logo">
+      <svg class="cargador__orbita" viewBox="-10 -10 120 120">
+        <circle class="cargador__exterior" cx="50" cy="50" r="56"/>
+        <circle class="cargador__pista" cx="50" cy="50" r="49"/>
+        <circle class="cargador__anillo" cx="50" cy="50" r="46" pathLength="100"/>
+        <circle class="cargador__arco" cx="50" cy="50" r="49"/>
+        <circle class="cargador__contraarco" cx="50" cy="50" r="42"/>
+      </svg>
+      <video class="cargador__video" id="cargador-video"
+             src="Multimedia/cargador/wave-3d-loop.mp4"
+             poster="Multimedia/cargador/wave-3d-loop.jpg"
+             autoplay muted loop playsinline preload="auto"></video>
+    </div>
+
+    <div class="cargador__progreso">
+      <span class="cargador__texto">Cargando</span>
+      <span class="cargador__porcentaje" id="cargador-porcentaje">000</span>
+    </div>
+  </div>
+</div>
+
 <a class="salto" href="#contenido">Ir al contenido</a>
 
 <nav class="nav">
@@ -225,7 +260,7 @@
 
         <div class="evento-destacado__info">
           <span class="evento-destacado__etiqueta" data-en="Next event">Próximo evento</span>
-          <p class="evento-destacado__fecha" data-en="21 NOV 2026 · 5:00 PM TO 1:00 AM">21 NOV 2026 · 18:00 A 02:00</p>
+          <p class="evento-destacado__fecha" data-en="21 NOV 2026 · 6:00 PM TO 2:00 AM">21 NOV 2026 · 18:00 A 02:00</p>
           <h3 class="evento-destacado__nombre" data-en="Outdoor Edition — Ache">Edición Outdoor — Ache</h3>
           <p class="evento-destacado__descripcion" data-en="Free entry.">Entrada libre y gratuita.</p>
         </div>

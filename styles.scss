@@ -18,7 +18,8 @@
 //  12. Contacto
 //  13. Pie
 //  14. Visor de galería (overlay)
-//  15. Responsive
+//  15. Pantalla de carga
+//  16. Responsive
 //
 // CRITERIO
 //   El marcado solo describe estructura. Todo el aspecto vive acá, y
@@ -1161,7 +1162,238 @@ img, video { display: block; max-width: 100%; }
 }
 
 
-// ═══ 15. RESPONSIVE ═══
+// ═══ 15. PANTALLA DE CARGA ═══
+
+// Cubre el sitio mientras cargan las imágenes principales. script.js
+// (módulo 9) actualiza --progreso entre 0 y 1 y la retira en dos
+// pasos: --listo desvanece el contenido y --fuera sube el telón.
+//
+// Si el script no llega a correr, la animación ocultarCargador la
+// saca sola a los 8 segundos; el script la desactiva con --activo.
+
+// Distancia de los rótulos de las esquinas al borde de la pantalla
+$borde-hud: clamp(32px, 5vw, 56px);
+
+.cargador {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  display: grid;
+  place-items: center;
+  background: $negro;
+  color: $gris;
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 0.9s cubic-bezier(.76, 0, .24, 1);
+  animation: ocultarCargador 0.6s ease 8s forwards;
+
+  &--activo { animation: none; }
+  &--fuera  { clip-path: inset(0 0 100% 0); }
+
+  // Grilla técnica de fondo: dos degradados repetidos dibujan las
+  // líneas, y la máscara radial la desvanece hacia los bordes
+  &__grilla {
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(90deg, $celeste-fondo 0 1px, transparent 1px 64px),
+      repeating-linear-gradient(0deg, $celeste-fondo 0 1px, transparent 1px 64px);
+    opacity: 0.5;
+    mask-image: radial-gradient(ellipse at center, #000 10%, transparent 70%);
+  }
+
+  // Esquinas en L: ocho degradados de 1px, dos por esquina
+  &__marco {
+    position: absolute;
+    inset: clamp(16px, 3vw, 32px);
+    --l: 18px;
+    background:
+      linear-gradient($celeste-borde, $celeste-borde) top left / var(--l) 1px,
+      linear-gradient($celeste-borde, $celeste-borde) top left / 1px var(--l),
+      linear-gradient($celeste-borde, $celeste-borde) top right / var(--l) 1px,
+      linear-gradient($celeste-borde, $celeste-borde) top right / 1px var(--l),
+      linear-gradient($celeste-borde, $celeste-borde) bottom left / var(--l) 1px,
+      linear-gradient($celeste-borde, $celeste-borde) bottom left / 1px var(--l),
+      linear-gradient($celeste-borde, $celeste-borde) bottom right / var(--l) 1px,
+      linear-gradient($celeste-borde, $celeste-borde) bottom right / 1px var(--l);
+    background-repeat: no-repeat;
+  }
+
+  // Rótulos de las cuatro esquinas, dentro del marco
+  &__marca,
+  &__coordenadas,
+  &__lema,
+  &__sitio {
+    @extend %texto-etiqueta;
+    position: absolute;
+    font-size: 0.62rem;
+    letter-spacing: 0.24em;
+    transition: opacity 0.45s ease;
+  }
+
+  &__marca       { top: $borde-hud;    left: $borde-hud; color: $blanco; }
+  &__coordenadas { top: $borde-hud;    right: $borde-hud; }
+  &__lema        { bottom: $borde-hud; left: $borde-hud; }
+  &__sitio       { bottom: $borde-hud; right: $borde-hud; }
+
+  // En celular los rótulos de la derecha chocan con los de la izquierda
+  &__coordenadas,
+  &__sitio {
+    @media (max-width: $bp-mini) { display: none; }
+  }
+
+  // El tercer límite depende del alto: en pantallas bajas (notebooks)
+  // el conjunto se achica para no chocar con los rótulos de abajo
+  &__centro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: min(80vw, 500px, (100vh - 300px) * 1.05);
+  }
+
+  // La salida desvanece cada pieza por separado y no el contenedor:
+  // una opacidad o un transform en un ancestro del video aislaría su
+  // mezcla (ver &__video) y dejaría ver el recuadro negro
+  &--listo &__marca,
+  &--listo &__coordenadas,
+  &--listo &__lema,
+  &--listo &__sitio,
+  &--listo &__logo::before,
+  &--listo &__orbita,
+  &--listo &__progreso { opacity: 0; }
+
+  &--listo &__video {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+
+  &__logo {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 864 / 544;
+
+    // El halo celeste da profundidad detrás del logo
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, $celeste-halo, transparent 65%);
+      transition: opacity 0.45s ease;
+    }
+  }
+
+  // El video tiene fondo negro: con mix-blend-mode: screen el negro
+  // se vuelve transparente y queda solo el logo, en todos los
+  // navegadores (Safari no reproduce video web con canal alfa)
+  &__video {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    mix-blend-mode: screen;
+    transition: opacity 0.45s ease, transform 0.45s ease;
+  }
+
+  // Órbita: una corona de marcas exterior, un anillo punteado fijo, un
+  // anillo que se completa con el porcentaje y dos arcos que giran en
+  // sentidos opuestos. El viewBox suma 10 unidades por lado para la
+  // corona: el 98,4 % de ancho mantiene los anillos interiores al 82 %
+  // del logo (82 × 120 / 100).
+  &__orbita {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 98.4%;
+    aspect-ratio: 1;
+    translate: -50% -50%;
+    fill: none;
+    pointer-events: none;
+    transition: opacity 0.45s ease;
+
+    circle {
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+  }
+
+  // Marcas cortas y gruesas, como un dial, que giran muy lento
+  &__exterior {
+    stroke: $celeste-borde;
+    stroke-width: 1.6;
+    stroke-dasharray: 0.4 3.12;
+    animation: girarOrbita 18s linear infinite reverse;
+  }
+
+  &__pista {
+    stroke: $celeste-fondo;
+    stroke-width: 0.4;
+    stroke-dasharray: 0.6 2.4;
+  }
+
+  // pathLength="100" en el marcado hace que el trazo mida 100: el
+  // desplazamiento es directamente lo que falta para completar.
+  // Arranca arriba (-90°) y avanza en sentido horario.
+  &__anillo {
+    stroke: $celeste;
+    stroke-width: 0.5;
+    stroke-dasharray: 100;
+    stroke-dashoffset: calc(100 - 100 * var(--progreso, 0));
+    rotate: -90deg;
+    filter: drop-shadow(0 0 1.2px $celeste);
+  }
+
+  &__arco {
+    stroke: $celeste;
+    stroke-width: 0.6;
+    stroke-dasharray: 48 260;
+    stroke-linecap: round;
+    animation: girarOrbita 2.8s linear infinite;
+  }
+
+  &__contraarco {
+    stroke: $celeste-borde;
+    stroke-width: 0.4;
+    stroke-dasharray: 22 242;
+    stroke-linecap: round;
+    animation: girarOrbita 4.2s linear infinite reverse;
+  }
+
+  &__progreso {
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    // La corona exterior (91,8 % del ancho) sobresale del recuadro del
+    // logo un 14,4 % del ancho por arriba y por abajo: el margen la deja
+    // libre. En margin-top el porcentaje se calcula sobre el ancho.
+    margin-top: calc(15% + 14px);
+    transition: opacity 0.45s ease;
+  }
+
+  &__texto {
+    @extend %texto-etiqueta;
+    font-size: 0.62rem;
+    letter-spacing: 0.3em;
+  }
+
+  // tabular-nums evita que el número tiemble al cambiar de ancho
+  &__porcentaje {
+    font-family: $fuente-mono;
+    font-size: 0.9rem;
+    letter-spacing: 0.12em;
+    color: $blanco;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+// Mientras la pantalla de carga está activa no se scrollea el sitio
+html.cargando { overflow: hidden; }
+
+// Las animaciones de entrada de la portada esperan a que suba el telón
+.cargador:not(.cargador--fuera) ~ main .portada * { animation-play-state: paused; }
+
+@keyframes ocultarCargador { to { opacity: 0; visibility: hidden; } }
+@keyframes girarOrbita     { to { transform: rotate(360deg); } }
+
+
+// ═══ 16. RESPONSIVE ═══
 
 // En pantallas táctiles el navegador simula un :hover que queda
 // aplicado tras el toque. Se neutralizan los efectos y se muestra de

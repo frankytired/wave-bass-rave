@@ -18,6 +18,7 @@
  *   6. Menú móvil
  *   7. Traductor ES / EN
  *   8. Flyer del evento destacado
+ *   9. Pantalla de carga
  */
 
 
@@ -415,4 +416,102 @@ if (flyer) {
       window.removeEventListener('scroll', alScrollear);
     }
   }).observe(flyer);
+}
+
+
+/* ── 9. Pantalla de carga ───────────────────────────────────
+ *
+ * El porcentaje y el anillo de carga van de 0 a 100 al ritmo del logo: el video hace
+ * tres giros en sus primeros 4 segundos y el 100 llega justo cuando
+ * terminan. Se reproduce a VELOCIDAD para que gire más rápido.
+ *
+ * Ese avance nunca supera la carga real: mientras falten las imágenes
+ * que no son lazy, el video del cargador, las tipografías o el evento
+ * load, se queda en 95 y el logo sigue girando. A los 7 s sale igual,
+ * para no retener al visitante con una conexión lenta.
+ *
+ * Si el video no avanza (navegador que bloquea la reproducción, modo
+ * ahorro de energía o "reducir movimiento"), un reloj propio que
+ * arranca un segundo más tarde toma su lugar y la carga no se traba.
+ *
+ * La salida es en dos pasos: --listo desvanece el contenido y, 450 ms
+ * después, --fuera sube el telón.
+ */
+
+const cargador = document.getElementById('cargador');
+
+if (cargador) {
+  const GIRO = 4;          // segundos de giro dentro del loop del video
+  const VELOCIDAD = 1.3;   // 4 s de giro se ven en poco más de 3 s
+  const MAXIMO = 7000;
+  const inicio = performance.now();
+
+  const porcentaje = document.getElementById('cargador-porcentaje');
+  const videoCargador = document.getElementById('cargador-video');
+
+  cargador.classList.add('cargador--activo');
+  document.documentElement.classList.add('cargando');
+  videoCargador.playbackRate = VELOCIDAD;
+
+  // Con "reducir movimiento" el logo queda quieto en su primer cuadro
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    videoCargador.removeAttribute('autoplay');
+    videoCargador.pause();
+  }
+
+  // Cada recurso es una promesa que se resuelve al terminar, con éxito
+  // o con error: un archivo roto no debe frenar la pantalla de carga
+  const terminar = (el, eventos) => new Promise((ok) => {
+    eventos.forEach((ev) => el.addEventListener(ev, ok, { once: true }));
+  });
+
+  const recursos = [
+    ...[...document.images]
+      .filter((img) => img.loading !== 'lazy' && !img.complete)
+      .map((img) => terminar(img, ['load', 'error'])),
+    videoCargador.readyState >= 3 ? Promise.resolve() : terminar(videoCargador, ['canplay', 'error']),
+    document.fonts.ready
+  ];
+
+  let recursosListos = false;
+  Promise.all(recursos).then(() => { recursosListos = true; });
+
+  let cargado = document.readyState === 'complete';
+  window.addEventListener('load', () => { cargado = true; }, { once: true });
+
+  // El avance solo crece: cuando el video vuelve a empezar el loop,
+  // currentTime baja a 0 pero el porcentaje no retrocede
+  let avance = 0;
+
+  const cuadro = (ahora) => {
+    const transcurrido = ahora - inicio;
+    const relojPropio = Math.max(0, (transcurrido - 1000) / 1000) * VELOCIDAD;
+    const reloj = Math.max(videoCargador.currentTime, relojPropio);
+
+    avance = Math.max(avance, Math.min(reloj / GIRO, 1) * 100);
+
+    const completo = (cargado && recursosListos) || transcurrido >= MAXIMO;
+    const mostrado = completo ? avance : Math.min(avance, 95);
+
+    porcentaje.textContent = String(Math.floor(mostrado)).padStart(3, '0');
+    cargador.style.setProperty('--progreso', mostrado / 100);
+
+    if (mostrado < 100) {
+      requestAnimationFrame(cuadro);
+      return;
+    }
+
+    cargador.classList.add('cargador--listo');
+
+    setTimeout(() => {
+      cargador.classList.add('cargador--fuera');
+      document.documentElement.classList.remove('cargando');
+    }, 450);
+
+    // 450 ms de fundido + 900 ms del telón: después se quita del DOM
+    // para que el video deje de decodificarse
+    setTimeout(() => cargador.remove(), 1400);
+  };
+
+  requestAnimationFrame(cuadro);
 }
