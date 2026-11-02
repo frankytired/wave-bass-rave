@@ -17,6 +17,7 @@
  *   5. Videos de YouTube
  *   6. Menú móvil
  *   7. Traductor ES / EN
+ *   8. Flyer del evento destacado
  */
 
 
@@ -371,4 +372,47 @@ if (botonIdioma) {
     // además es lo que consulta el menú móvil para sus etiquetas
     document.documentElement.lang = ingles ? 'en' : 'es';
   });
+}
+
+
+/* ── 8. Flyer del evento destacado ──────────────────────────
+ *
+ * La figura tiene dos imágenes apiladas: el flyer y, encima e
+ * invisible, el line up. Cuando la figura ya pasó el centro de la
+ * pantalla y su borde superior subió por encima del 15 % del alto, se
+ * agrega --alterna y el CSS hace el fundido; al volver a subir, regresa
+ * el flyer. Las dos condiciones garantizan que el flyer se vea entero
+ * antes del cambio, también al entrar desde el menú.
+ *
+ * El cálculo corre solo mientras la figura está en pantalla: el
+ * IntersectionObserver prende y apaga el listener de scroll.
+ */
+
+const flyer = document.getElementById('flyer-destacado');
+
+if (flyer) {
+  let pendiente = false;
+
+  const actualizar = () => {
+    pendiente = false;
+    const { top, height } = flyer.getBoundingClientRect();
+    const umbral = Math.min(window.innerHeight * 0.15, (window.innerHeight - height) / 2);
+    flyer.classList.toggle('evento-destacado__imagen--alterna', top < umbral);
+  };
+
+  // requestAnimationFrame agrupa los eventos de scroll en uno por cuadro
+  const alScrollear = () => {
+    if (pendiente) return;
+    pendiente = true;
+    requestAnimationFrame(actualizar);
+  };
+
+  new IntersectionObserver(([entrada]) => {
+    if (entrada.isIntersecting) {
+      window.addEventListener('scroll', alScrollear, { passive: true });
+      actualizar();
+    } else {
+      window.removeEventListener('scroll', alScrollear);
+    }
+  }).observe(flyer);
 }

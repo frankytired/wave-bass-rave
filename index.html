@@ -208,29 +208,44 @@
       <div class="seccion__encabezado aparece aparece--fijo">
         <div>
           <p class="seccion__bajada" data-en="Events">Eventos</p>
-          <h2 class="seccion__titulo" data-en="Event archive">Registro de Eventos</h2>
         </div>
       </div>
 
       <article class="evento-destacado aparece">
-        <figure class="evento-destacado__imagen">
-          <img src="Multimedia/WAVE-EN-ACHE.jpg"
-               alt="Flyer de Wave Bass Rave Edición Outdoor en Paraje Ache, Buenos Aires"
+        <!-- La segunda imagen (line up) reemplaza a la primera al scrollear:
+             script.js agrega el modificador --alterna a la figura. -->
+        <figure class="evento-destacado__imagen" id="flyer-destacado">
+          <img src="Multimedia/wave-cierre-2026-flyer.webp"
+               alt="Flyer de Wave Bass Rave Cierre 2026 en Ache Paraje: sábado 21 de noviembre de 17 a 01 h, entrada libre"
                decoding="async" fetchpriority="high">
+          <img class="evento-destacado__alterna" src="Multimedia/wave-cierre-2026-lineup.webp"
+               alt="Line up de Wave Bass Rave Cierre 2026, de 17:00 a 01:00"
+               loading="lazy" decoding="async">
         </figure>
 
         <div class="evento-destacado__info">
-          <span class="evento-destacado__etiqueta" data-en="Latest event">Ultimo evento</span>
-          <p class="evento-destacado__fecha" data-en="29 AUG 2026 · 4:00 PM TO 1:00 AM">29 AGO 2026 · 16:00 A 01:00</p>
+          <span class="evento-destacado__etiqueta" data-en="Next event">Próximo evento</span>
+          <p class="evento-destacado__fecha" data-en="21 NOV 2026 · 5:00 PM TO 1:00 AM">21 NOV 2026 · 17:00 A 01:00</p>
           <h3 class="evento-destacado__nombre" data-en="Outdoor Edition — Ache">Edición Outdoor — Ache</h3>
-          <p class="evento-destacado__descripcion" data-en="Paraje Ache, Buenos Aires. Full line up coming soon — first ticket release available now.">Paraje Ache, Buenos Aires. Line up completo próximamente — primera tanda de entradas ya disponible.</p>
-          <a class="evento-destacado__boton" href="https://drive.google.com/drive/u/1/folders/1k9xojZBGZIGJXSSD55d5GPoPPHlqfkdK" target="_blank" rel="noopener" data-en="Photos">Fotos</a>
+          <p class="evento-destacado__descripcion" data-en="Free entry.">Entrada libre y gratuita.</p>
         </div>
       </article>
 
       <p class="seccion__subtitulo" data-en="Past events">Eventos anteriores</p>
 
       <div class="eventos-pasados aparece">
+        <article class="eventos-pasados__item">
+          <figure class="eventos-pasados__imagen">
+            <img src="Multimedia/WAVE-EN-ACHE.jpg" alt="Flyer de Wave Bass Rave Edición Outdoor en Paraje Ache, Buenos Aires" loading="lazy" decoding="async">
+          </figure>
+          <p class="eventos-pasados__fecha" data-en="29 AUG">29 AGO</p>
+          <div>
+            <h3 class="eventos-pasados__nombre" data-en="Outdoor Edition — Ache">Edición Outdoor — Ache</h3>
+            <p class="eventos-pasados__lugar">Paraje Ache · Buenos Aires</p>
+          </div>
+          <a class="eventos-pasados__fotos" href="https://drive.google.com/drive/u/1/folders/1k9xojZBGZIGJXSSD55d5GPoPPHlqfkdK" target="_blank" rel="noopener" data-en="Photos">Fotos</a>
+        </article>
+
         <article class="eventos-pasados__item">
           <figure class="eventos-pasados__imagen">
             <img src="Multimedia/WAVE4.jpg" alt="Wave Bass Rave Aniversario 10 nivel 2 en Uniclub" loading="lazy" decoding="async">
@@ -278,13 +293,17 @@
       <div class="seccion__encabezado aparece aparece--fijo">
         <div>
           <p class="seccion__bajada" data-en="Training">Formación</p>
-          <h2 class="seccion__titulo" data-en="Academy">Academia</h2>
         </div>
         <p class="seccion__nota" data-en="Limited spots. Online &amp; in-person classes.">Cupos reducidos, Clases on-line &amp; presenciales.</p>
       </div>
 
+      <!-- El logo hace de título de la sección: el alt es el texto que
+           leen buscadores y lectores de pantalla. -->
+      <h2 class="academia-logo aparece aparece--fijo">
+        <img src="Multimedia/academia/wave-academy-logo.svg" alt="Wave Bass Academy">
+      </h2>
+
       <div class="academia-intro aparece">
-        <p class="academia-intro__marca">Wave Academy</p>
         <h3 class="academia-intro__titulo" data-en="The Bass Music academy in Spanish">La academia del Bass Music en español</h3>
         <p class="academia-intro__lead" data-en="Wave Academy is more than an academy: it's a meeting point for DJs, producers and Bass Music lovers.">Wave Academy es más que una academia: es un punto de encuentro para DJs, productores y amantes del Bass Music.</p>
         <p class="academia-intro__lead" data-en="A space to learn, create, share music and be part of an active community.">Un espacio para aprender, crear, compartir música y formar parte de una comunidad activa.</p>

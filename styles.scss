@@ -554,9 +554,12 @@ img, video { display: block; max-width: 100%; }
 
 // ═══ 7. EVENTOS ═══
 
+// La columna del flyer se acota por el alto de la pantalla: el flyer es
+// vertical (3:4) y en notebooks de poca altura no entraba entero.
+// 160px descuenta la barra de navegación y el aire de la sección.
 .evento-destacado {
   @extend %bloque-destacado;
-  grid-template-columns: 1.1fr 1fr;
+  grid-template-columns: min(52%, calc((100vh - 160px) * 0.75)) 1fr;
 
   // height: 100% hace que la imagen iguale la altura de la columna de
   // texto; sin eso, aspect-ratio deja un desfasaje entre ambas.
@@ -564,30 +567,52 @@ img, video { display: block; max-width: 100%; }
     @extend %caja-media;
     height: 100%;
     min-height: 100%;
-    aspect-ratio: 4/3;
+    aspect-ratio: 3/4;
 
     img { object-position: center; }
 
+    // El line up espera encima del flyer, invisible, y aparece con un
+    // fundido cuando script.js agrega --alterna a la figura al scrollear
+    img.evento-destacado__alterna {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+    }
+
+    &--alterna img.evento-destacado__alterna.cargada { opacity: 1; }
+
     @media (max-width: $bp-medio) {
-      aspect-ratio: 16/9;
       height: auto;
       min-height: 0;
     }
   }
 
+  // El texto acompaña la altura del flyer vertical: etiqueta arriba,
+  // fecha y nombre al centro y descripción abajo. Los margin-top: auto
+  // reparten el espacio que sobra; cuando la card va en una columna no
+  // sobra espacio y no tienen efecto.
   &__info     { @extend %bloque-destacado-texto; }
   &__etiqueta { @extend %pastilla; }
-  &__fecha    { @extend %texto-etiqueta; }
 
-  &__nombre {
-    font-size: clamp(1.6rem, 3vw, 2.4rem);
-    font-weight: 700;
+  &__fecha {
+    @extend %texto-etiqueta;
+    margin-top: auto;
+    font-size: clamp(0.72rem, 1.1vw, 0.9rem);
   }
 
-  // 46ch limita la línea a una longitud legible
+  &__nombre {
+    font-size: clamp(1.6rem, 3.6vw, 3.4rem);
+    font-weight: 700;
+    line-height: 1.05;
+  }
+
+  // La línea superior separa el dato práctico del nombre del evento
   &__descripcion {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: $borde;
     color: $gris;
-    max-width: 46ch;
+    font-size: clamp(0.95rem, 1.2vw, 1.1rem);
   }
 
   &__boton {
@@ -644,17 +669,25 @@ img, video { display: block; max-width: 100%; }
 
 // ═══ 8. ACADEMIA ═══
 
+// El logo ocupa el lugar del título: centrado y con el ancho acotado
+// para que no compita con el texto en pantallas grandes. Es un SVG,
+// así que se ve nítido a cualquier tamaño.
+.academia-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: clamp(48px, 8vh, 88px);
+
+  img {
+    width: min(100%, 520px);
+    height: auto;
+  }
+}
+
 // Texto de captación: cuerpo e interlineado mayores que el resto del
 // sitio, porque es el bloque que se espera que se lea completo.
 .academia-intro {
   max-width: 58ch;
   margin-bottom: clamp(40px, 6vh, 64px);
-
-  &__marca {
-    @extend %texto-etiqueta;
-    color: $celeste;
-    margin-bottom: 14px;
-  }
 
   &__titulo {
     font-size: clamp(1.5rem, 3vw, 2.2rem);
@@ -1258,7 +1291,7 @@ img, video { display: block; max-width: 100%; }
       width: 100%;
       max-width: 260px;
       margin: 0 auto;
-      aspect-ratio: 4/5;
+      aspect-ratio: 3/4;
       height: auto;
       min-height: 0;
     }

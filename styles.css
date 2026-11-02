@@ -1,4 +1,4 @@
-.visor__contador, .pie__credito, .pie, .contacto__via a, .contacto__redes a, .galeria__foto::after, .lanzamiento__artista, .profesor__curso, .profesor__numero, .academia-intro__marca, .eventos-pasados__lugar, .eventos-pasados__fecha, .evento-destacado__fecha, .seccion__subtitulo, .seccion__nota, .seccion__bajada, .portada__datos, .portada__bajada, .nav__idioma, .nav__menu a, .salto, .evento-destacado__etiqueta, .lanzamiento__boton, .profesor__boton, .eventos-pasados__fotos, .evento-destacado__boton {
+.visor__contador, .pie__credito, .pie, .contacto__via a, .contacto__redes a, .galeria__foto::after, .lanzamiento__artista, .profesor__curso, .profesor__numero, .eventos-pasados__lugar, .eventos-pasados__fecha, .evento-destacado__fecha, .seccion__subtitulo, .seccion__nota, .seccion__bajada, .portada__datos, .portada__bajada, .nav__idioma, .nav__menu a, .salto, .evento-destacado__etiqueta, .lanzamiento__boton, .profesor__boton, .eventos-pasados__fotos, .evento-destacado__boton {
   font-family: "Space Mono", monospace;
   font-size: 0.72rem;
   letter-spacing: 0.18em;
@@ -437,31 +437,46 @@ img, video {
 }
 
 .evento-destacado {
-  grid-template-columns: 1.1fr 1fr;
+  grid-template-columns: min(52%, (100vh - 160px) * 0.75) 1fr;
 }
 .evento-destacado__imagen {
   height: 100%;
   min-height: 100%;
-  aspect-ratio: 4/3;
+  aspect-ratio: 3/4;
 }
 .evento-destacado__imagen img {
   -o-object-position: center;
      object-position: center;
 }
+.evento-destacado__imagen img.evento-destacado__alterna {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+.evento-destacado__imagen--alterna img.evento-destacado__alterna.cargada {
+  opacity: 1;
+}
 @media (max-width: 800px) {
   .evento-destacado__imagen {
-    aspect-ratio: 16/9;
     height: auto;
     min-height: 0;
   }
 }
+.evento-destacado__fecha {
+  margin-top: auto;
+  font-size: clamp(0.72rem, 1.1vw, 0.9rem);
+}
 .evento-destacado__nombre {
-  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-size: clamp(1.6rem, 3.6vw, 3.4rem);
   font-weight: 700;
+  line-height: 1.05;
 }
 .evento-destacado__descripcion {
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   color: #93a2a8;
-  max-width: 46ch;
+  font-size: clamp(0.95rem, 1.2vw, 1.1rem);
 }
 .evento-destacado__boton {
   margin-top: 10px;
@@ -502,13 +517,19 @@ img, video {
   display: block;
   margin-top: 2px;
 }
+.academia-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: clamp(48px, 8vh, 88px);
+}
+.academia-logo img {
+  width: min(100%, 520px);
+  height: auto;
+}
+
 .academia-intro {
   max-width: 58ch;
   margin-bottom: clamp(40px, 6vh, 64px);
-}
-.academia-intro__marca {
-  color: #5ec8f5;
-  margin-bottom: 14px;
 }
 .academia-intro__titulo {
   font-size: clamp(1.5rem, 3vw, 2.2rem);
@@ -1086,7 +1107,7 @@ img, video {
     width: 100%;
     max-width: 260px;
     margin: 0 auto;
-    aspect-ratio: 4/5;
+    aspect-ratio: 3/4;
     height: auto;
     min-height: 0;
   }
